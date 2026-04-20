@@ -148,10 +148,12 @@ function computeResult() {
 }
 
 function clarityLabel(v) {
-  if (v >= 0.6) return 'はっきり';
-  if (v >= 0.3) return 'やや';
-  if (v >= 0.1) return '僅差で';
-  return 'ほぼ互角、わずかに';
+  if (v >= 0.85) return '極めて強く';
+  if (v >= 0.65) return '強く';
+  if (v >= 0.45) return '明確に';
+  if (v >= 0.25) return 'やや';
+  if (v >= 0.08) return 'わずかに';
+  return null; // ほぼ互角
 }
 
 function renderResult() {
@@ -174,23 +176,29 @@ function renderResult() {
     { key: 'TD', left: { pole: 'T', label: 'Theatrical', ja: '演技' }, right: { pole: 'D', label: 'Descriptive', ja: '解説' } },
   ];
   for (const a of axisDefs) {
-    const leftScore = score[a.left.pole];
-    const rightScore = score[a.right.pole];
-    const chosen = code.includes(a.left.pole) ? a.left : a.right;
-    const total = leftScore + rightScore;
-    const leftPct = total === 0 ? 50 : (leftScore / total) * 100;
+    const winnerIsLeft = code.includes(a.left.pole);
+    const winner = winnerIsLeft ? a.left : a.right;
+    const c = clarity[a.key];
+    const label = clarityLabel(c);
+    const fillPct = c * 50; // 中央から片側最大50%分
+    const captionText = label === null
+      ? 'ほぼ互角'
+      : (winnerIsLeft
+          ? `← ${label} ${winner.label}寄り`
+          : `${label} ${winner.label}寄り →`);
 
     const row = document.createElement('div');
     row.className = 'axis-row';
     row.innerHTML = `
       <div class="axis-labels">
-        <span class="${code.includes(a.left.pole) ? 'picked' : ''}">${a.left.label} <small>${a.left.ja}</small></span>
-        <span class="axis-clarity">${clarityLabel(clarity[a.key])} ${chosen.label}</span>
-        <span class="${code.includes(a.right.pole) ? 'picked' : ''}">${a.right.label} <small>${a.right.ja}</small></span>
+        <span class="axis-pole ${winnerIsLeft ? 'picked' : ''}">${a.left.label} <small>${a.left.ja}</small></span>
+        <span class="axis-pole ${!winnerIsLeft ? 'picked' : ''}">${a.right.label} <small>${a.right.ja}</small></span>
       </div>
       <div class="axis-bar">
-        <div class="axis-fill" style="width:${leftPct}%"></div>
+        <div class="axis-center"></div>
+        <div class="axis-fill ${winnerIsLeft ? 'axis-fill-left' : 'axis-fill-right'}" style="width:${fillPct}%"></div>
       </div>
+      <div class="axis-caption ${label === null ? 'neutral' : ''}">${captionText}</div>
     `;
     axesEl.appendChild(row);
   }

@@ -328,16 +328,16 @@ html, body {
 .result-section p { margin: 0; font-size: 15px; line-height: 1.8; }
 
 .axis-row {
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 .axis-row:last-child { margin-bottom: 0; }
 .axis-labels {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
   font-size: 13px;
   color: var(--muted);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   gap: 10px;
 }
 .axis-labels small {
@@ -345,27 +345,58 @@ html, body {
   color: var(--muted);
   letter-spacing: 0;
 }
-.axis-labels .picked {
-  color: var(--ink);
-  font-weight: 700;
-}
-.axis-clarity {
-  font-size: 11px;
+.axis-pole.picked {
   color: var(--accent);
-  letter-spacing: 0.05em;
-  white-space: nowrap;
+  font-weight: 700;
+  font-size: 15px;
+}
+.axis-pole.picked small {
+  color: var(--accent-ink);
 }
 .axis-bar {
-  height: 6px;
+  height: 10px;
   background: #ede3d2;
   border-radius: 99px;
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
+}
+.axis-center {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: #d0c4ac;
+  transform: translateX(-1px);
+  z-index: 2;
 }
 .axis-fill {
-  height: 100%;
-  background: linear-gradient(to right, var(--accent) 0%, var(--accent-ink) 100%);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(to right, var(--accent), var(--accent-ink));
   transition: width 0.6s ease;
+}
+.axis-fill.axis-fill-left {
+  right: 50%;
+  border-radius: 99px 0 0 99px;
+  background: linear-gradient(to left, var(--accent), var(--accent-ink));
+}
+.axis-fill.axis-fill-right {
+  left: 50%;
+  border-radius: 0 99px 99px 0;
+}
+.axis-caption {
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 600;
+}
+.axis-caption.neutral {
+  color: var(--muted);
+  font-weight: 400;
 }
 
 footer.site-foot {
@@ -390,6 +421,6 @@ footer.site-foot {
   .likert-caption { font-size: 11px; }
   .result-code { font-size: 56px; }
   .result-name { font-size: 22px; }
-  .axis-labels { flex-wrap: wrap; }
-  .axis-clarity { order: 3; width: 100%; text-align: center; }
+  .axis-pole.picked { font-size: 14px; }
+  .axis-caption { font-size: 11px; }
 }
