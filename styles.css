@@ -12,6 +12,16 @@
   --gold-deep: #9c7419;
   --ink: #1a0e0e;
   --pop: #ff4d7a;
+  --pole-left: #ec0a2c;   /* ショッキングレッド — A/U/P/T */
+  --pole-right: #0038c8;  /* エレクトリックブルー — E/R/I/D */
+  --pole-A: var(--pole-left);
+  --pole-U: var(--pole-left);
+  --pole-P: var(--pole-left);
+  --pole-T: var(--pole-left);
+  --pole-E: var(--pole-right);
+  --pole-R: var(--pole-right);
+  --pole-I: var(--pole-right);
+  --pole-D: var(--pole-right);
   --radius: 16px;
   --radius-lg: 24px;
   --display: 'Rampart One', 'Noto Sans JP', sans-serif;
@@ -173,17 +183,17 @@ body::after {
   font-size: 14px;
   position: relative;
 }
-.axes-intro li > span:not(.vs) {
+.axes-intro li > span[data-pole] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: var(--panel);
+  background: color-mix(in srgb, var(--pole-color) 18%, #fff);
   border: 2px solid var(--ink);
   border-radius: 10px;
   padding: 12px 16px;
   font-family: var(--chunky);
-  color: var(--accent);
+  color: var(--pole-color);
   font-weight: 400;
   font-size: 17px;
   text-align: center;
@@ -191,9 +201,31 @@ body::after {
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
-.axes-intro li > span:last-child {
-  background: #fff8e8;
+.axes-intro li > span[data-pole="A"] { --pole-color: var(--pole-A); }
+.axes-intro li > span[data-pole="E"] { --pole-color: var(--pole-E); }
+.axes-intro li > span[data-pole="U"] { --pole-color: var(--pole-U); }
+.axes-intro li > span[data-pole="R"] { --pole-color: var(--pole-R); }
+.axes-intro li > span[data-pole="P"] { --pole-color: var(--pole-P); }
+.axes-intro li > span[data-pole="I"] { --pole-color: var(--pole-I); }
+.axes-intro li > span[data-pole="T"] { --pole-color: var(--pole-T); }
+.axes-intro li > span[data-pole="D"] { --pole-color: var(--pole-D); }
+.axes-intro li > span[data-pole] small {
+  color: var(--pole-color);
+  opacity: 0.85;
+  align-self: flex-end;
+  padding-bottom: 3px;
+  font-size: 18px;
 }
+.init {
+  font-family: var(--display);
+  font-size: 2em;
+  line-height: 1;
+  padding: 0 2px 1px 0;
+  margin-right: -1px;
+  letter-spacing: 0.02em;
+  vertical-align: -2px;
+}
+.pole-name { line-height: 1; }
 .axes-intro small {
   font-family: 'Noto Sans JP', sans-serif;
   font-weight: 700;
@@ -602,6 +634,14 @@ body::after {
 
 .axis-row { margin-bottom: 26px; }
 .axis-row:last-child { margin-bottom: 0; }
+.axis-row[data-winner="A"] { --pole-color: var(--pole-A); }
+.axis-row[data-winner="E"] { --pole-color: var(--pole-E); }
+.axis-row[data-winner="U"] { --pole-color: var(--pole-U); }
+.axis-row[data-winner="R"] { --pole-color: var(--pole-R); }
+.axis-row[data-winner="P"] { --pole-color: var(--pole-P); }
+.axis-row[data-winner="I"] { --pole-color: var(--pole-I); }
+.axis-row[data-winner="T"] { --pole-color: var(--pole-T); }
+.axis-row[data-winner="D"] { --pole-color: var(--pole-D); }
 .axis-labels {
   display: flex;
   justify-content: space-between;
@@ -625,11 +665,11 @@ body::after {
 }
 .axis-pole.picked {
   font-family: var(--chunky);
-  color: var(--accent);
+  color: var(--pole-color, var(--accent));
   font-weight: 400;
   font-size: 17px;
 }
-.axis-pole.picked small { color: var(--accent-deep); }
+.axis-pole.picked small { color: var(--pole-color, var(--accent-deep)); opacity: 0.85; }
 .axis-bar {
   height: 14px;
   background: var(--bg-alt);
@@ -657,17 +697,17 @@ body::after {
 .axis-fill.axis-fill-left {
   right: 50%;
   border-radius: 99px 0 0 99px;
-  background: linear-gradient(270deg, var(--accent), var(--gold));
+  background: linear-gradient(270deg, var(--pole-color, var(--accent)), var(--gold));
 }
 .axis-fill.axis-fill-right {
   left: 50%;
   border-radius: 0 99px 99px 0;
-  background: linear-gradient(90deg, var(--gold), var(--accent));
+  background: linear-gradient(90deg, var(--gold), var(--pole-color, var(--accent)));
 }
 .axis-caption {
   font-family: var(--chunky);
   font-size: 13px;
-  color: var(--accent);
+  color: var(--pole-color, var(--accent));
   letter-spacing: 0.06em;
   margin-top: 10px;
   text-align: center;

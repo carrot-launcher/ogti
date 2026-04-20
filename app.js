@@ -162,6 +162,10 @@ function computeResult() {
   return { code, score, clarity };
 }
 
+function emphasizeInitial(word) {
+  return `<span class="pole-name"><span class="init">${word[0]}</span>${word.slice(1)}</span>`;
+}
+
 function clarityLabel(v) {
   if (v >= 0.85) return '極めて強く';
   if (v >= 0.65) return '強く';
@@ -204,10 +208,11 @@ function renderResult() {
 
     const row = document.createElement('div');
     row.className = 'axis-row';
+    row.dataset.winner = winner.pole;
     row.innerHTML = `
       <div class="axis-labels">
-        <span class="axis-pole ${winnerIsLeft ? 'picked' : ''}">${a.left.label} <small>${a.left.ja}</small></span>
-        <span class="axis-pole ${!winnerIsLeft ? 'picked' : ''}">${a.right.label} <small>${a.right.ja}</small></span>
+        <span class="axis-pole ${winnerIsLeft ? 'picked' : ''}">${emphasizeInitial(a.left.label)}<small>${a.left.ja}</small></span>
+        <span class="axis-pole ${!winnerIsLeft ? 'picked' : ''}">${emphasizeInitial(a.right.label)}<small>${a.right.ja}</small></span>
       </div>
       <div class="axis-bar">
         <div class="axis-center"></div>
