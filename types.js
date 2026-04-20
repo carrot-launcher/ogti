@@ -1,8 +1,11 @@
 // OGTI 16タイプ定義
 // コードは [A|E][U|R][P|I][T|D] の4文字
+// group は先頭2文字 (AU / AR / EU / ER) — UIでテーマカラーに利用
+// symbol は1文字のタイプ象徴漢字
 
 export const types = {
   AUPT: {
+    symbol: '狂',
     name: '爆走ピエロ',
     tagline: '客を置き去りに、全力で舞台を駆け回る異形の芸人',
     strength: 'ハマれば会場が地殻変動を起こす、誰にも真似できない瞬発力',
@@ -10,6 +13,7 @@ export const types = {
     partner: 'ERID (静観する戯作者) — ブレーキ役として補完される',
   },
   AUPD: {
+    symbol: '奇',
     name: '奇想観測者',
     tagline: '異世界の風景を平然とした顔でスケッチする描写家',
     strength: '誰も思いつかない角度からの一文で、静かに会場をざわつかせる',
@@ -17,6 +21,7 @@ export const types = {
     partner: 'ERPT (愛されキャラ) — 世界観を翻訳してくれる',
   },
   AUIT: {
+    symbol: '異',
     name: '前衛の俳優',
     tagline: '誰も見たことのない役を、全身で演じきる挑戦者',
     strength: 'なりきりの深さで、奇抜な設定に不思議なリアリティを宿す',
@@ -24,6 +29,7 @@ export const types = {
     partner: 'ERPD (あるある職人) — 地に足の着いた世界に引き戻してくれる',
   },
   AUID: {
+    symbol: '論',
     name: '狂気の評論家',
     tagline: '異界の出来事を、冷静な分析で解説する論客',
     strength: '知的な言い回しと飛躍したテーマのギャップだけで笑いを作れる',
@@ -31,6 +37,7 @@ export const types = {
     partner: 'ERPT (愛されキャラ) — 難解さを柔らかく受け止めてくれる',
   },
   ARPT: {
+    symbol: '熱',
     name: '叫ぶ庶民派',
     tagline: '誰もが知っている題材を、全力の演技で笑いに変える熱血',
     strength: '共感と勢いの両輪で、初見の客でも即座に巻き込める強さ',
@@ -38,6 +45,7 @@ export const types = {
     partner: 'EUID (静かな詩人) — テンションの波を整えてくれる',
   },
   ARPD: {
+    symbol: '突',
     name: 'ツッコミ職人',
     tagline: '共有された風景に、鋭いツッコミの一撃を入れる腕利き',
     strength: '短い言葉で的確に笑いの急所を突く、舞台上の狙撃手',
@@ -45,6 +53,7 @@ export const types = {
     partner: 'EUIT (幻燈演出家) — 新しい景色を持ち込んでくれる',
   },
   ARIT: {
+    symbol: '挑',
     name: '挑発的なホスト',
     tagline: '客を煽りながら巻き込む、計算された司会者',
     strength: '会場の空気を読み、一瞬で場を支配する統率力',
@@ -52,6 +61,7 @@ export const types = {
     partner: 'EUPD (夢想の画家) — 内側からイメージを差し出してくれる',
   },
   ARID: {
+    symbol: '皮',
     name: '社会の皮肉屋',
     tagline: '共通の現実を冷笑的な言葉で切り取る論評家',
     strength: 'あるあるを知性で再構築し、大人の笑いに仕立てる切れ味',
@@ -59,6 +69,7 @@ export const types = {
     partner: 'EUPT (妖精キャラ) — 場に空気穴を開けてくれる',
   },
   EUPT: {
+    symbol: '妖',
     name: '妖精キャラ',
     tagline: 'ふわりと舞い降りて、異界のルールで笑わせる不思議な存在',
     strength: 'そこにいるだけで場の空気が変わる、独特のキャラクター力',
@@ -66,6 +77,7 @@ export const types = {
     partner: 'ARID (社会の皮肉屋) — 世界に重心を与えてくれる',
   },
   EUPD: {
+    symbol: '夢',
     name: '夢想の画家',
     tagline: '不思議な情景を、丁寧な筆致でスケッチする静かな作家',
     strength: '美しい異常を描き出し、読後にじわりと効く笑いを作れる',
@@ -73,6 +85,7 @@ export const types = {
     partner: 'ARIT (挑発的なホスト) — 場のテンポを作ってくれる',
   },
   EUIT: {
+    symbol: '幻',
     name: '幻燈演出家',
     tagline: '独自の世界観を美しく演じて見せる、舞台の幻術師',
     strength: '設計された所作と奇抜な設定が融合した、完成度の高い一瞬',
@@ -80,6 +93,7 @@ export const types = {
     partner: 'ARPD (ツッコミ職人) — 現実に引き戻すリズムをくれる',
   },
   EUID: {
+    symbol: '詩',
     name: '静かな詩人',
     tagline: '短い言葉で奇妙な世界を完成させる、引き算の達人',
     strength: '一文で風景を立ち上げる密度と、余白で笑わせる品格',
@@ -87,6 +101,7 @@ export const types = {
     partner: 'ARPT (叫ぶ庶民派) — 熱量と声量で外に届けてくれる',
   },
   ERPT: {
+    symbol: '愛',
     name: '愛されキャラ',
     tagline: '誰もが知る景色を、親しみやすい演技で届ける舞台人',
     strength: '場を温める空気感と、誰にでも届く共感力',
@@ -94,6 +109,7 @@ export const types = {
     partner: 'AUID (狂気の評論家) — 異物感で存在を際立たせてくれる',
   },
   ERPD: {
+    symbol: '共',
     name: 'あるある職人',
     tagline: '日常の隙間を言葉で切り取る、共感笑いのプロ',
     strength: '万人に届く共感の精度と、短く刺すリズム感',
@@ -101,6 +117,7 @@ export const types = {
     partner: 'AUIT (前衛の俳優) — 意外性を持ち込んでくれる',
   },
   ERIT: {
+    symbol: '芸',
     name: '名人芸のMC',
     tagline: '洗練された所作で共通の景色を演じる、ベテランの舞台人',
     strength: '計算された間と品格で、安心して笑いを任せられる貫禄',
@@ -108,6 +125,7 @@ export const types = {
     partner: 'AUPD (奇想観測者) — 新しい景色を持ち込んでくれる',
   },
   ERID: {
+    symbol: '筆',
     name: '静観する戯作者',
     tagline: '共有された現実を、知的で洗練された筆致で描く観察者',
     strength: '上質な言葉選びと構築力で、読み返したくなる完成度',

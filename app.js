@@ -175,13 +175,45 @@ function clarityLabel(v) {
   return null; // ほぼ互角
 }
 
+const GROUP_NAMES = {
+  AU: { ja: '狂騒派', en: 'WILD' },
+  AR: { ja: '熱血派', en: 'FERVENT' },
+  EU: { ja: '幽玄派', en: 'MYSTIC' },
+  ER: { ja: '正統派', en: 'CLASSIC' },
+};
+
+const SUB_GROUP_NAMES = {
+  PT: { ja: '踊り手', en: 'DANCER' },
+  PD: { ja: '射撃手', en: 'SHOOTER' },
+  IT: { ja: '演者',   en: 'ACTOR' },
+  ID: { ja: '観察者', en: 'OBSERVER' },
+};
+
 function renderResult() {
   const { code, score, clarity } = computeResult();
   const t = types[code];
+  const group = code.substring(0, 2);
 
+  const card = document.getElementById('result-card');
+  card.dataset.group = group;
+  document.getElementById('type-watermark').textContent = t.symbol;
+  document.getElementById('type-symbol').textContent = t.symbol;
   document.getElementById('result-code').textContent = code;
   document.getElementById('result-name').textContent = t.name;
   document.getElementById('result-tagline').textContent = t.tagline;
+  const subGroup = code.substring(2, 4);
+  const g = GROUP_NAMES[group];
+  const sg = SUB_GROUP_NAMES[subGroup];
+  document.getElementById('result-group').innerHTML = `
+    <span class="group-line primary">
+      <span class="group-deriv">${code[0]}<span class="op">×</span>${code[1]}</span>
+      <span class="group-name">${g.ja} / ${g.en}</span>
+    </span>
+    <span class="group-line secondary">
+      <span class="group-deriv">${code[2]}<span class="op">×</span>${code[3]}</span>
+      <span class="group-name">${sg.ja} / ${sg.en}</span>
+    </span>
+  `;
   document.getElementById('result-strength').textContent = t.strength;
   document.getElementById('result-weakness').textContent = t.weakness;
   document.getElementById('result-partner').textContent = t.partner;
@@ -189,22 +221,16 @@ function renderResult() {
   const axesEl = document.getElementById('result-axes');
   axesEl.innerHTML = '';
   const axisDefs = [
-    { key: 'AE', left: { pole: 'A', label: 'Aggressive', ja: '挑戦' }, right: { pole: 'E', label: 'Elegant', ja: '洗練' } },
-    { key: 'UR', left: { pole: 'U', label: 'Unique', ja: '独自' }, right: { pole: 'R', label: 'Relatable', ja: '共感' } },
-    { key: 'PI', left: { pole: 'P', label: 'Playful', ja: '剽軽' }, right: { pole: 'I', label: 'Intelligent', ja: '知性' } },
-    { key: 'TD', left: { pole: 'T', label: 'Theatrical', ja: '演技' }, right: { pole: 'D', label: 'Descriptive', ja: '解説' } },
+    { key: 'AE', title: { en: 'NERVE', ja: '度胸' },   left: { pole: 'A', label: 'Aggressive', ja: '挑戦' }, right: { pole: 'E', label: 'Elegant', ja: '洗練' } },
+    { key: 'UR', title: { en: 'LENS',  ja: '視座' },   left: { pole: 'U', label: 'Unique', ja: '独自' },    right: { pole: 'R', label: 'Relatable', ja: '共感' } },
+    { key: 'PI', title: { en: 'PULSE', ja: '拍子' },   left: { pole: 'P', label: 'Playful', ja: '剽軽' },   right: { pole: 'I', label: 'Intelligent', ja: '知性' } },
+    { key: 'TD', title: { en: 'VOICE', ja: '語り口' }, left: { pole: 'T', label: 'Theatrical', ja: '演技' },right: { pole: 'D', label: 'Descriptive', ja: '解説' } },
   ];
   for (const a of axisDefs) {
     const winnerIsLeft = code.includes(a.left.pole);
     const winner = winnerIsLeft ? a.left : a.right;
     const c = clarity[a.key];
-    const label = clarityLabel(c);
     const fillPct = c * 50; // 中央から片側最大50%分
-    const captionText = label === null
-      ? 'ほぼ互角'
-      : (winnerIsLeft
-          ? `← ${label} ${winner.label}寄り`
-          : `${label} ${winner.label}寄り →`);
 
     const row = document.createElement('div');
     row.className = 'axis-row';
@@ -212,13 +238,13 @@ function renderResult() {
     row.innerHTML = `
       <div class="axis-labels">
         <span class="axis-pole ${winnerIsLeft ? 'picked' : ''}">${emphasizeInitial(a.left.label)}<small>${a.left.ja}</small></span>
+        <span class="axis-title"><strong>${a.title.en}</strong><span>${a.title.ja}</span></span>
         <span class="axis-pole ${!winnerIsLeft ? 'picked' : ''}">${emphasizeInitial(a.right.label)}<small>${a.right.ja}</small></span>
       </div>
       <div class="axis-bar">
         <div class="axis-center"></div>
         <div class="axis-fill ${winnerIsLeft ? 'axis-fill-left' : 'axis-fill-right'}" style="width:${fillPct}%"></div>
       </div>
-      <div class="axis-caption ${label === null ? 'neutral' : ''}">${captionText}</div>
     `;
     axesEl.appendChild(row);
   }
