@@ -187,9 +187,11 @@ html, body {
   align-items: flex-start;
   transition: border-color 0.15s ease, transform 0.08s ease, background 0.15s ease;
 }
-.choice:hover {
+.choice.is-hover,
+.choice:focus-visible {
   border-color: var(--accent);
   background: #fff8f7;
+  outline: none;
 }
 .choice:active { transform: translateY(1px); }
 
@@ -207,7 +209,8 @@ html, body {
   font-size: 14px;
   letter-spacing: 0.05em;
 }
-.choice:hover .choice-label {
+.choice.is-hover .choice-label,
+.choice:focus-visible .choice-label {
   background: var(--accent);
   color: #fff;
 }

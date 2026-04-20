@@ -43,6 +43,8 @@ function renderQuestion() {
     btn.type = 'button';
     btn.innerHTML = `<span class="choice-label">${idx === 0 ? 'A' : 'B'}</span><span class="choice-text">${c.text}</span>`;
     btn.addEventListener('click', () => answer(c.pole));
+    btn.addEventListener('mouseenter', () => btn.classList.add('is-hover'));
+    btn.addEventListener('mouseleave', () => btn.classList.remove('is-hover'));
     choicesEl.appendChild(btn);
   });
 
