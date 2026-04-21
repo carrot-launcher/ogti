@@ -1,5 +1,6 @@
 import { questions } from './questions.js';
 import { types } from './types.js';
+import { sections } from './sections.js';
 
 const state = {
   answers: [], // { pole: 'A', strength: 1..3 } or undefined
@@ -230,9 +231,21 @@ function renderResult() {
       <span class="group-name">${sg.ja} / ${sg.en}</span>
     </span>
   `;
-  document.getElementById('result-strength').textContent = t.strength;
-  document.getElementById('result-weakness').textContent = t.weakness;
-  document.getElementById('result-partner').textContent = t.partner;
+  // セクション (見出し+本文) を sections.js の定義順に生成
+  const sectionsEl = document.getElementById('result-sections');
+  sectionsEl.innerHTML = '';
+  for (const s of sections) {
+    const body = t[s.key];
+    if (!body) continue;
+    const el = document.createElement('div');
+    el.className = 'result-section';
+    const h3 = document.createElement('h3');
+    h3.textContent = s.title;
+    const p = document.createElement('p');
+    p.textContent = body;
+    el.append(h3, p);
+    sectionsEl.appendChild(el);
+  }
 
   const axesEl = document.getElementById('result-axes');
   axesEl.innerHTML = '';
