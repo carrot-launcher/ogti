@@ -26,13 +26,14 @@ const screens = {
   result: document.getElementById('screen-result'),
 };
 
+// 0.9/1.9/2.9 で合計0を数学的に排除 (最小|差|=0.1、タイブレーク不要)
 const LIKERT_BUTTONS = [
-  { value: -3, label: 'A強',  side: 'a' },
-  { value: -2, label: 'A',    side: 'a' },
-  { value: -1, label: 'ややA', side: 'a' },
-  { value:  1, label: 'ややB', side: 'b' },
-  { value:  2, label: 'B',    side: 'b' },
-  { value:  3, label: 'B強',  side: 'b' },
+  { value: -2.9, label: 'A強',  side: 'a' },
+  { value: -1.9, label: 'A',    side: 'a' },
+  { value: -0.9, label: 'ややA', side: 'a' },
+  { value:  0.9, label: 'ややB', side: 'b' },
+  { value:  1.9, label: 'B',    side: 'b' },
+  { value:  2.9, label: 'B強',  side: 'b' },
 ];
 
 function show(name) {
@@ -165,8 +166,8 @@ function computeResult() {
     (diffs.PI >= 0 ? 'P' : 'I') +
     (diffs.TD >= 0 ? 'T' : 'D');
 
-  // 5 questions × strength up to 3 = max diff 15 per axis
-  const maxDiff = 15;
+  // 5 questions × strength up to 2.9 = max diff 14.5 per axis
+  const maxDiff = 14.5;
   const clarity = {
     AE: Math.min(1, Math.abs(diffs.AE) / maxDiff),
     UR: Math.min(1, Math.abs(diffs.UR) / maxDiff),

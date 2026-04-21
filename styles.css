@@ -578,13 +578,13 @@ body::after {
   border: 2px solid var(--muted);
   transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.likert-btn[data-value="-2"] .likert-dot,
-.likert-btn[data-value="2"] .likert-dot {
+.likert-btn[data-value="-1.9"] .likert-dot,
+.likert-btn[data-value="1.9"] .likert-dot {
   width: 16px;
   height: 16px;
 }
-.likert-btn[data-value="-3"] .likert-dot,
-.likert-btn[data-value="3"] .likert-dot {
+.likert-btn[data-value="-2.9"] .likert-dot,
+.likert-btn[data-value="2.9"] .likert-dot {
   width: 20px;
   height: 20px;
 }
