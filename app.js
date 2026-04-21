@@ -185,6 +185,28 @@ applyThemeAndPalette();
 
 hydrateLanding();
 
+// ---- デバッグモード (localhost 限定) ----
+// 127.0.0.0/8 / localhost / ::1 からアクセスしたときだけ URL ?type=AUPT を有効にする。
+// これにより本番ドメインではテストモードが一切発火しない。
+function isLocalAccess() {
+  const h = location.hostname;
+  return h === 'localhost' || h === '::1' || /^127\./.test(h);
+}
+const TEST_TYPE = (() => {
+  if (!isLocalAccess()) return null;
+  const q = new URL(location.href).searchParams.get('type');
+  return q && types[q] ? q : null;
+})();
+
+// localhost + ?type=AUPT 指定時はクイズをスキップして結果画面へ直行
+if (TEST_TYPE) {
+  requestAnimationFrame(() => {
+    renderResult();
+    renderTypeIndex();
+    show('result');
+  });
+}
+
 // ========== Core flow ==========
 
 function show(name) {
@@ -319,6 +341,13 @@ const QUESTION_COUNT_BY_AXIS_KEY = (() => {
 const MAX_STRENGTH = Math.max(...LIKERT_BUTTONS.map((b) => Math.abs(b.value)));
 
 function computeResult() {
+  // TEST_TYPE 指定時 かつ クイズ未回答のときのみ URL 指定タイプで代替する。
+  // ランディングからクイズを始めれば state.answers が埋まり、通常の集計に切り替わる。
+  if (TEST_TYPE && state.answers.length === 0) {
+    const clarity = Object.fromEntries(config.axes.map((a) => [a.key, 1]));
+    return { code: TEST_TYPE, score: {}, clarity };
+  }
+
   const score = {};
   for (const axis of config.axes) {
     score[axis.left.pole] = 0;
