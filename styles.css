@@ -128,7 +128,7 @@
   --frame-cyan: #80ffaa;
   --pop: #66ff99;
   --pole-left: #00ff41;
-  --pole-right: #00ffaa;
+  --pole-right: #a0ff00;  /* 純緑accentに対し黄緑系でハッキリ区別 */
 }
 
 /* ---- palette: sunset (夕焼け: オレンジ×マゼンタ×金、藍背景) ---- */
@@ -172,7 +172,7 @@
   --frame-cyan: #ffffff;
   --pop: #88e8ff;
   --pole-left: #4fc3ff;
-  --pole-right: #00ffff;
+  --pole-right: #60e8d0;  /* 空色accentに対し凍ったミント系で区別 */
 }
 
 /* ---- palette: blood-moon (血月: 深赤×オレンジ×琥珀、黒背景) ---- */
@@ -238,7 +238,7 @@
   --frame-cyan: #ff7a1a;
   --pop: #ffbe5e;
   --pole-left: #ff9f00;
-  --pole-right: #ffc825;
+  --pole-right: #ff5020;  /* 琥珀accentに対し赤橙でハッキリ区別 (CRT暖色系の中での対比) */
 }
 
 /* ---- palette: miami (Miami Vice 80s: ホットピンク×ターコイズ) ---- */
