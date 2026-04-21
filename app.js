@@ -534,28 +534,10 @@ function downloadShare() {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-async function systemShareImage() {
-  if (!shareBlob) return;
-  const { code } = computeResult();
-  const t = types[code];
-  const file = new File([shareBlob], `OGTI_${code}.png`, { type: 'image/png' });
-  const data = {
-    title: `OGTI 診断結果 — ${t.name}`,
-    text: `私のOGTIは【${code}】${t.name}\n${t.tagline}\n#OGTI診断`,
-    files: [file],
-  };
-  if (navigator.canShare && navigator.canShare(data)) {
-    try { await navigator.share(data); } catch (e) { /* cancelled */ }
-  } else {
-    downloadShare();
-  }
-}
-
 document.getElementById('btn-share').addEventListener('click', openShareModal);
 document.getElementById('share-close').addEventListener('click', closeShareModal);
 document.getElementById('share-backdrop').addEventListener('click', closeShareModal);
 document.getElementById('share-download').addEventListener('click', downloadShare);
-document.getElementById('share-native').addEventListener('click', systemShareImage);
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !document.getElementById('share-modal').hidden) closeShareModal();
 });
