@@ -1,6 +1,15 @@
-// OGTI 設問データ
-// axis: 1=A/E, 2=U/R, 3=P/I, 4=T/D
-// choices[].pole: 選んだときに加算される極 (A/E/U/R/P/I/T/D)
+// 設問データ
+//
+// axis:         1〜4 (config.axes の index + 1)。どの軸の設問かを示す。
+// prompt:       設問文
+// choices:      左右2つの選択肢。
+// choices[].pole: その選択肢が支持する極のキー (config.axes の left.pole / right.pole と一致)
+// choices[].text: 選択肢の本文
+//
+// ⚠️ 各軸の設問数は **奇数** にすること。
+//    奇数個 × 奇数(strength)の和 = 奇数 ≠ 0 のため、引き分けが数学的に発生しない。
+//    軸ごとに 5問 / 7問 のように揃える必要はないが、それぞれ奇数であること。
+//    偶数にすると起動時にコンソール警告が出る。
 
 export const questions = [
   // --- 軸1: Aggressive(A) vs Elegant(E) ---

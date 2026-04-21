@@ -3,6 +3,8 @@
 //   - questions.js  全設問
 //   - types.js      16タイプの定義 (symbol / name / tagline / strength / weakness / partner)
 
+import { questions } from './questions.js';
+
 export const config = {
   // ---- ブランド ----
   brand: {
@@ -24,7 +26,7 @@ export const config = {
     // 2段落構成。HTMLタグ (strong等) 使用可
     lead: [
       'OGTI は、あなたの<strong>大喜利の流儀</strong>を4軸16タイプで診断します。',
-      '全20問。お題と回答を読み、どちら寄りかを 6段階で選んでください。',
+      `全${questions.length}問。お題と回答を読み、どちら寄りかを 6段階で選んでください。`,
     ],
     axesHeading: '大喜利の流儀 4つの軸',
     startButton: '診断を始める',

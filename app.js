@@ -263,6 +263,26 @@ function back() {
   renderQuestion();
 }
 
+// 軸ごとの設問数を集計 (questions.js の q.axis は 1-indexed で config.axes のインデックスに対応)
+const QUESTION_COUNT_BY_AXIS_KEY = (() => {
+  const counts = {};
+  for (const axis of config.axes) counts[axis.key] = 0;
+  for (const q of questions) {
+    const axis = config.axes[q.axis - 1];
+    if (axis) counts[axis.key]++;
+  }
+  // 偶数問題数の軸があるとタイが発生しうるので警告 (奇数個の奇数の和 = 奇数、という証明に依存)
+  for (const [key, count] of Object.entries(counts)) {
+    if (count > 0 && count % 2 === 0) {
+      console.warn(`[診断] 軸 ${key} の設問数が偶数 (${count}) です。引き分け (スコア差 0) が発生する可能性があります。奇数にすることを推奨します。`);
+    }
+  }
+  return counts;
+})();
+
+// LIKERT_BUTTONS の絶対値最大 = 1問あたりの最大 strength
+const MAX_STRENGTH = Math.max(...LIKERT_BUTTONS.map((b) => Math.abs(b.value)));
+
 function computeResult() {
   const score = {};
   for (const axis of config.axes) {
@@ -275,12 +295,12 @@ function computeResult() {
 
   let code = '';
   const clarity = {};
-  // 5問 × strength up to 7 = 軸ごとの最大差 35
-  const maxDiff = 35;
   for (const axis of config.axes) {
     const diff = score[axis.left.pole] - score[axis.right.pole];
     code += diff >= 0 ? axis.left.pole : axis.right.pole;
-    clarity[axis.key] = Math.min(1, Math.abs(diff) / maxDiff);
+    // 軸ごとの最大差 = 軸の問題数 × 最大 strength (questions.js の中身に自動追従)
+    const maxDiff = QUESTION_COUNT_BY_AXIS_KEY[axis.key] * MAX_STRENGTH;
+    clarity[axis.key] = maxDiff > 0 ? Math.min(1, Math.abs(diff) / maxDiff) : 0;
   }
   return { code, score, clarity };
 }
