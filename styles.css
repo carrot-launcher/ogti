@@ -20,7 +20,7 @@
    インデックス順: config.axes[0].left + config.axes[1].left から
    left-left / left-right / right-left / right-right */
 :root {
-  --group-1-main: #ff2e8c; --group-1-deep: #c01860;
+  --group-1-main: #ff2e58; --group-1-deep: #c01838;
   --group-2-main: #ff7a1a; --group-2-deep: #c95200;
   --group-3-main: #a44dff; --group-3-deep: #6a1fb8;
   --group-4-main: #00c8ff; --group-4-deep: #008fb8;
