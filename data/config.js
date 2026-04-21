@@ -6,6 +6,15 @@
 import { questions } from './questions.js';
 
 export const config = {
+  // ---- テーマ / 配色 ----
+  // styles.css の :root[data-theme="..."] / :root[data-palette="..."] を指定する。
+  //   theme   = 構造レイヤー (フォント・角丸など)
+  //   palette = 配色レイヤー (色トークンのみ)
+  // app.js が <html> の data-theme / data-palette 属性に反映する。
+  // 利用可能なプリセットは styles.css 冒頭を参照。
+  theme:   'neon',
+  palette: 'red-blue',
+
   // ---- ブランド ----
   brand: {
     name: 'OGTI',                      // 大タイトル

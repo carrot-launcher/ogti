@@ -8,11 +8,38 @@ MBTI風の **4軸 × 16タイプ** 構造を持つジョーク診断を作るた
 
 | ファイル | 内容 |
 |---|---|
-| `data/config.js` | ブランド / 4軸 / グループ / 結果セクション / 利用規約情報 |
+| `data/config.js` | テーマ/配色 / ブランド / 4軸 / グループ / 結果セクション / 利用規約情報 |
 | `data/questions.js` | 設問と回答 |
 | `data/types.js` | 16タイプそれぞれの名前・タグライン・強み/癖/相方 |
 
 軸の数 (4)、タイプ数 (16)、採点ロジック、画面デザインはフレームワーク側で固定。
+
+### テーマ / 配色
+
+見た目は **テーマ (構造) × パレット (配色) の2軸直交プリセット** で切り替えます。
+
+```js
+// data/config.js
+theme:   'neon',       // 構造レイヤー: フォント・角丸など (色なし)
+palette: 'red-blue',   // 配色レイヤー: 色トークンのみ
+```
+
+プリセットの実体は `styles.css` 冒頭の `:root[data-theme="..."]` / `:root[data-palette="..."]` ブロック。追加するときは同じ変数名を埋めた別ブロックを足すだけ。
+
+同梱プリセット:
+
+| kind | name | 内容 |
+|---|---|---|
+| theme | `neon` | Rampart One / RocknRoll One / Zen Maru Gothic の3書体、角丸16/24px |
+| palette | `red-blue` | 赤×シアン×金 (デフォルト) |
+| palette | `lime-magenta` | 黄緑×マゼンタ |
+| palette | `matrix` | 映画 The Matrix 風、全面緑 |
+| palette | `sunset` | 夕焼けのオレンジ×マゼンタ×金 |
+| palette | `ice` | 氷の洞窟、白×青×シアン |
+| palette | `blood-moon` | 血月、深赤×オレンジ×琥珀 |
+| palette | `vaporwave` | 80年代ポップ、ピンク×シアン×紫 |
+
+組み合わせは自由ですが、全組み合わせが映えるとは限りません (例: 低彩度パレットはneonの発光と相性が悪い)。
 
 ### 設問数のルール
 

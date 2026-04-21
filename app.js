@@ -40,15 +40,26 @@ const LIKERT_BUTTONS = [
   { value:  7, label: 'B強',  side: 'b' },
 ];
 
-// ---- テーマ (グループ色) ----
-// ネオンテーマ固定。別テーマ導入時はここを差し替え予定。
-// キーは タイプコード先頭2文字 = 第1軸+第2軸のポール組合せ
-const GROUP_COLORS = {
-  [config.axes[0].left.pole  + config.axes[1].left.pole]:  { main: '#ff2e8c', deep: '#c01860' },
-  [config.axes[0].left.pole  + config.axes[1].right.pole]: { main: '#ff7a1a', deep: '#c95200' },
-  [config.axes[0].right.pole + config.axes[1].left.pole]:  { main: '#a44dff', deep: '#6a1fb8' },
-  [config.axes[0].right.pole + config.axes[1].right.pole]: { main: '#00c8ff', deep: '#008fb8' },
-};
+// ---- Theme / Palette ----
+// 実際の色・フォントの値は styles.css の :root[data-theme|palette="..."] にある。
+// ここでは CSS 変数を読むヘルパーと、グループ色の position → CSS 変数のマッピングだけ持つ。
+function cssVar(name, fallback = '') {
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return v || fallback;
+}
+
+// グループ色: タイプコード先頭2文字 (第1軸×第2軸) を CSS 変数 --group-N-* に解決する。
+// 順序は styles.css のコメント参照 (left-left / left-right / right-left / right-right)。
+function getGroupColors() {
+  const L0 = config.axes[0].left.pole,  R0 = config.axes[0].right.pole;
+  const L1 = config.axes[1].left.pole,  R1 = config.axes[1].right.pole;
+  return {
+    [L0 + L1]: { main: cssVar('--group-1-main'), deep: cssVar('--group-1-deep') },
+    [L0 + R1]: { main: cssVar('--group-2-main'), deep: cssVar('--group-2-deep') },
+    [R0 + L1]: { main: cssVar('--group-3-main'), deep: cssVar('--group-3-deep') },
+    [R0 + R1]: { main: cssVar('--group-4-main'), deep: cssVar('--group-4-deep') },
+  };
+}
 
 function escapeHtml(s) {
   return String(s)
@@ -147,6 +158,14 @@ function buildArrowBadge(title) {
   span.append(strong, small);
   return span;
 }
+
+// テーマ/配色を <html> の data 属性に反映 (ページ種別を問わず先に適用)
+function applyThemeAndPalette() {
+  const root = document.documentElement;
+  if (config.theme)   root.dataset.theme   = config.theme;
+  if (config.palette) root.dataset.palette = config.palette;
+}
+applyThemeAndPalette();
 
 hydrateLanding();
 
@@ -315,9 +334,9 @@ function renderResult() {
   const group = code.substring(0, 2);
 
   const card = document.getElementById('result-card');
-  // グループ色 (ネオンピンク/オレンジ/紫/シアン) をインラインで注入。
-  // ポール文字に依存せず、GROUP_COLORS の position-based キーで解決する。
-  const gc = GROUP_COLORS[group];
+  // グループ色をインラインで注入。
+  // ポール文字に依存せず、palette の --group-N-* を position-based で解決する。
+  const gc = getGroupColors()[group];
   if (gc) {
     card.style.setProperty('--group-color', gc.main);
     card.style.setProperty('--group-color-deep', gc.deep);
@@ -402,7 +421,14 @@ function launchConfetti() {
   const area = document.getElementById('confetti');
   if (!area) return;
   area.innerHTML = '';
-  const colors = ['#ff2e6b', '#00eaff', '#ffe63a', '#ff66b3', '#ff1a6b', '#ffffff'];
+  const colors = [
+    cssVar('--accent',     '#ff2e6b'),
+    cssVar('--pole-right', '#00eaff'),
+    cssVar('--gold',       '#ffe63a'),
+    cssVar('--pop',        '#ff66b3'),
+    cssVar('--pole-left',  '#ff1a6b'),
+    cssVar('--text',       '#faf8ff'),
+  ];
   const count = 80;
   for (let i = 0; i < count; i++) {
     const piece = document.createElement('div');
@@ -462,7 +488,7 @@ function drawNeonText(ctx, text, x, y, color, offsetColor, offsetDist = 6) {
   ctx.save();
   // Offset depth (gold + ink)
   ctx.shadowBlur = 0;
-  ctx.fillStyle = '#05010f';
+  ctx.fillStyle = cssVar('--ink', '#05010f');
   ctx.fillText(text, x + offsetDist * 2, y + offsetDist * 2);
   ctx.fillStyle = offsetColor;
   ctx.fillText(text, x + offsetDist, y + offsetDist);
@@ -516,7 +542,17 @@ async function generateShareCanvas(format = 'square') {
   const t = types[code];
   const group = code.substring(0, 2);
   const subGroup = code.substring(2, 4);
-  const gc = GROUP_COLORS[group];
+  const gc = getGroupColors()[group];
+
+  // Canvas 描画で使う色は CSS 変数 (palette) から読む
+  const P = {
+    bg:        cssVar('--bg',         '#0a0618'),
+    accent:    cssVar('--accent',     '#ff2e6b'),
+    gold:      cssVar('--gold',       '#ffe63a'),
+    poleRight: cssVar('--pole-right', '#00eaff'),
+    text:      cssVar('--text',       '#faf8ff'),
+    muted:     cssVar('--muted',      '#9388b8'),
+  };
 
   const isPortrait = format === 'portrait';
   const W = 1080;
@@ -558,26 +594,26 @@ async function generateShareCanvas(format = 'square') {
   await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
   // ---- Background ----
-  ctx.fillStyle = '#0a0618';
+  ctx.fillStyle = P.bg;
   ctx.fillRect(0, 0, W, H);
   const g1 = ctx.createRadialGradient(W * 0.18, H * 0.08, 0, W * 0.18, H * 0.08, W * 0.8);
-  g1.addColorStop(0, 'rgba(255, 46, 107, 0.28)');
-  g1.addColorStop(0.55, 'rgba(10, 6, 24, 0)');
+  g1.addColorStop(0, hexToRgba(P.accent, 0.28));
+  g1.addColorStop(0.55, hexToRgba(P.bg, 0));
   ctx.fillStyle = g1;
   ctx.fillRect(0, 0, W, H);
   const g2 = ctx.createRadialGradient(W * 0.85, H * 0.95, 0, W * 0.85, H * 0.95, W * 0.8);
-  g2.addColorStop(0, 'rgba(0, 234, 255, 0.22)');
-  g2.addColorStop(0.55, 'rgba(10, 6, 24, 0)');
+  g2.addColorStop(0, hexToRgba(P.poleRight, 0.22));
+  g2.addColorStop(0.55, hexToRgba(P.bg, 0));
   ctx.fillStyle = g2;
   ctx.fillRect(0, 0, W, H);
 
   // ---- Grid pattern ----
   ctx.lineWidth = 1;
-  ctx.strokeStyle = 'rgba(255, 46, 107, 0.05)';
+  ctx.strokeStyle = hexToRgba(P.accent, 0.05);
   for (let x = 0; x <= W; x += 54) {
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
   }
-  ctx.strokeStyle = 'rgba(0, 234, 255, 0.05)';
+  ctx.strokeStyle = hexToRgba(P.poleRight, 0.05);
   for (let y = 0; y <= H; y += 54) {
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
   }
@@ -645,10 +681,10 @@ async function generateShareCanvas(format = 'square') {
   ctx.textBaseline = 'top';
   ctx.font = '64px "Rampart One"';
   const brandDisplay = config.brand.name + (config.brand.accent || '');
-  drawNeonText(ctx, brandDisplay, W / 2, isPortrait ? cardY + 40 : 116, '#ff2e6b', '#ffe63a', 4);
+  drawNeonText(ctx, brandDisplay, W / 2, isPortrait ? cardY + 40 : 116, P.accent, P.gold, 4);
   ctx.font = '15px "RocknRoll One"';
-  ctx.fillStyle = '#00eaff';
-  ctx.shadowColor = '#00eaff';
+  ctx.fillStyle = P.poleRight;
+  ctx.shadowColor = P.poleRight;
   ctx.shadowBlur = 10;
   ctx.fillText(config.brand.subtitle, W / 2, isPortrait ? cardY + 134 : 210);
   ctx.restore();
@@ -658,7 +694,7 @@ async function generateShareCanvas(format = 'square') {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.font = `${isPortrait ? 200 : 240}px "Rampart One"`;
-  drawNeonText(ctx, code, W / 2, isPortrait ? cardY + 270 : 420, gc.main, '#ffe63a', 6);
+  drawNeonText(ctx, code, W / 2, isPortrait ? cardY + 270 : 420, gc.main, P.gold, 6);
   ctx.restore();
 
   // ---- Type name ----
@@ -666,8 +702,8 @@ async function generateShareCanvas(format = 'square') {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.font = `bold ${isPortrait ? 60 : 72}px "Zen Maru Gothic"`;
-  ctx.fillStyle = '#ffe63a';
-  ctx.shadowColor = '#ffe63a';
+  ctx.fillStyle = P.gold;
+  ctx.shadowColor = P.gold;
   ctx.shadowBlur = 22;
   ctx.fillText(t.name, W / 2, isPortrait ? cardY + 435 : 650);
   ctx.restore();
@@ -678,7 +714,7 @@ async function generateShareCanvas(format = 'square') {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = '26px "Zen Maru Gothic"';
-    ctx.fillStyle = '#b8a9e0';
+    ctx.fillStyle = P.muted;
     wrapJPText(ctx, t.tagline, W / 2, 750, W - 180, 44);
     ctx.restore();
   }
@@ -703,8 +739,8 @@ async function generateShareCanvas(format = 'square') {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.font = '20px "RocknRoll One"';
-      ctx.fillStyle = 'rgba(250, 248, 255, 0.75)';
-      ctx.shadowColor = 'rgba(255, 255, 255, 0.3)';
+      ctx.fillStyle = hexToRgba(P.text, 0.75);
+      ctx.shadowColor = hexToRgba(P.text, 0.3);
       ctx.shadowBlur = 6;
       ctx.fillText(`${code[2]} × ${code[3]}  ${s1n.ja} / ${s1n.en}`, W / 2, 924);
       ctx.restore();
@@ -723,8 +759,8 @@ async function generateShareCanvas(format = 'square') {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
       ctx.font = '30px "RocknRoll One"';
-      ctx.fillStyle = '#ffe63a';
-      ctx.shadowColor = '#ffe63a';
+      ctx.fillStyle = P.gold;
+      ctx.shadowColor = P.gold;
       ctx.shadowBlur = 14;
       ctx.fillText(s.title, W / 2, y);
       ctx.restore();
@@ -734,8 +770,8 @@ async function generateShareCanvas(format = 'square') {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
       ctx.font = '32px "Zen Maru Gothic"';
-      ctx.fillStyle = '#faf8ff';
-      ctx.shadowColor = 'rgba(255, 255, 255, 0.25)';
+      ctx.fillStyle = P.text;
+      ctx.shadowColor = hexToRgba(P.text, 0.25);
       ctx.shadowBlur = 6;
       const plain = String(body).replace(/<[^>]+>/g, '').replace(/\n+/g, ' ').trim();
       const lineCount = wrapJPTextTop(ctx, plain, W / 2, y, W - 140, 52);
@@ -749,7 +785,7 @@ async function generateShareCanvas(format = 'square') {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.font = '18px "RocknRoll One"';
-  ctx.fillStyle = 'rgba(147, 136, 184, 0.8)';
+  ctx.fillStyle = hexToRgba(P.muted, 0.8);
   ctx.fillText(config.brand.hashtag, W / 2, isPortrait ? 1870 : 990);
   ctx.restore();
 

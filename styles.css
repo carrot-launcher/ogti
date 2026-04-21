@@ -1,4 +1,29 @@
+/* ============================================================
+ * Theme / Palette プリセット (2軸直交)
+ *
+ *   theme   = 構造レイヤー (フォント・角丸など。色を持たない)
+ *   palette = 配色レイヤー (色トークンのみ)
+ *
+ * config.js の theme / palette が <html data-theme data-palette> に
+ * 反映され、以下のブロックから該当プリセットが選ばれる。
+ *
+ * 新プリセットを追加するときは、同じ変数名を埋めた別ブロックを
+ * 下に足すだけで動く。
+ *
+ * 組み合わせは自由だが、全組み合わせが映えるとは限らない
+ * (例: neon + 低彩度パレットは光らない)。
+ * ============================================================ */
+
+/* ---- base fallback (data 属性なしでも動くデフォルト = neon + red-blue) ---- */
 :root {
+  /* theme: neon */
+  --display: 'Rampart One', 'Noto Sans JP', sans-serif;
+  --chunky:  'RocknRoll One', 'Noto Sans JP', sans-serif;
+  --body:    'Zen Maru Gothic', 'Noto Sans JP', -apple-system, sans-serif;
+  --radius: 16px;
+  --radius-lg: 24px;
+
+  /* palette: red-blue */
   --bg: #0a0618;
   --bg-alt: #140828;
   --panel: #1a0d32;
@@ -6,22 +31,215 @@
   --text: #faf8ff;
   --muted: #9388b8;
   --line: #3a1d5c;
+  --ink: #05010f;
   --accent: #ff2e6b;
   --accent-deep: #c91550;
   --accent-soft: rgba(255, 46, 107, 0.22);
   --gold: #ffe63a;
   --gold-deep: #b89608;
-  --ink: #05010f;
   --frame: #ff2e6b;
   --frame-cyan: #00eaff;
   --pop: #ff66b3;
   --pole-left: #ff1a6b;
   --pole-right: #00eaff;
+  /* グループ色 (タイプコード先頭2文字 = 第1軸×第2軸の4パターン)
+     インデックス順は config.axes[0].left + config.axes[1].left から
+     left-left / left-right / right-left / right-right */
+  --group-1-main: #ff2e8c; --group-1-deep: #c01860;
+  --group-2-main: #ff7a1a; --group-2-deep: #c95200;
+  --group-3-main: #a44dff; --group-3-deep: #6a1fb8;
+  --group-4-main: #00c8ff; --group-4-deep: #008fb8;
+}
+
+/* ---- theme: neon (構造・フォント・角丸) ---- */
+:root[data-theme="neon"] {
+  --display: 'Rampart One', 'Noto Sans JP', sans-serif;
+  --chunky:  'RocknRoll One', 'Noto Sans JP', sans-serif;
+  --body:    'Zen Maru Gothic', 'Noto Sans JP', -apple-system, sans-serif;
   --radius: 16px;
   --radius-lg: 24px;
-  --display: 'Rampart One', 'Noto Sans JP', sans-serif;
-  --chunky: 'RocknRoll One', 'Noto Sans JP', sans-serif;
-  --body: 'Zen Maru Gothic', 'Noto Sans JP', -apple-system, sans-serif;
+}
+
+/* ---- palette: red-blue (現行の赤×青×金) ---- */
+:root[data-palette="red-blue"] {
+  --bg: #0a0618;
+  --bg-alt: #140828;
+  --panel: #1a0d32;
+  --panel-alt: #241248;
+  --text: #faf8ff;
+  --muted: #9388b8;
+  --line: #3a1d5c;
+  --ink: #05010f;
+  --accent: #ff2e6b;
+  --accent-deep: #c91550;
+  --accent-soft: rgba(255, 46, 107, 0.22);
+  --gold: #ffe63a;
+  --gold-deep: #b89608;
+  --frame: #ff2e6b;
+  --frame-cyan: #00eaff;
+  --pop: #ff66b3;
+  --pole-left: #ff1a6b;
+  --pole-right: #00eaff;
+  --group-1-main: #ff2e8c; --group-1-deep: #c01860;
+  --group-2-main: #ff7a1a; --group-2-deep: #c95200;
+  --group-3-main: #a44dff; --group-3-deep: #6a1fb8;
+  --group-4-main: #00c8ff; --group-4-deep: #008fb8;
+}
+
+/* ---- palette: lime-magenta (黄緑×紫のネオン) ---- */
+:root[data-palette="lime-magenta"] {
+  --bg: #0a140a;
+  --bg-alt: #0f2415;
+  --panel: #132a1a;
+  --panel-alt: #1d3d28;
+  --text: #f6fff0;
+  --muted: #8fb09a;
+  --line: #2a5238;
+  --ink: #050f08;
+  --accent: #d0ff2e;
+  --accent-deep: #7aa800;
+  --accent-soft: rgba(208, 255, 46, 0.22);
+  --gold: #ffd93a;
+  --gold-deep: #b88c08;
+  --frame: #d0ff2e;
+  --frame-cyan: #ff4fd8;
+  --pop: #a8ff66;
+  --pole-left: #d0ff2e;
+  --pole-right: #ff4fd8;
+  --group-1-main: #c8ff2e; --group-1-deep: #7ac000;
+  --group-2-main: #2effa0; --group-2-deep: #00a565;
+  --group-3-main: #ff4fd8; --group-3-deep: #b01e95;
+  --group-4-main: #c478ff; --group-4-deep: #7a2fbc;
+}
+
+/* ---- palette: matrix (映画 The Matrix 風、全面緑) ---- */
+:root[data-palette="matrix"] {
+  --bg: #000804;
+  --bg-alt: #001a0c;
+  --panel: #002613;
+  --panel-alt: #00381e;
+  --text: #d6ffd6;
+  --muted: #5c9c70;
+  --line: #0a4d1e;
+  --ink: #000402;
+  --accent: #00ff41;
+  --accent-deep: #00a82b;
+  --accent-soft: rgba(0, 255, 65, 0.22);
+  --gold: #c8ff2e;
+  --gold-deep: #7fa816;
+  --frame: #00ff41;
+  --frame-cyan: #80ffaa;
+  --pop: #66ff99;
+  --pole-left: #00ff41;
+  --pole-right: #00ffaa;
+  --group-1-main: #00ff66; --group-1-deep: #008833;
+  --group-2-main: #aaff00; --group-2-deep: #5c8800;
+  --group-3-main: #00ffcc; --group-3-deep: #00886a;
+  --group-4-main: #66ff99; --group-4-deep: #338855;
+}
+
+/* ---- palette: sunset (夕焼け: オレンジ×マゼンタ×金、藍背景) ---- */
+:root[data-palette="sunset"] {
+  --bg: #1a0a24;
+  --bg-alt: #240e30;
+  --panel: #2d103a;
+  --panel-alt: #3e1650;
+  --text: #fff5ed;
+  --muted: #b09c9c;
+  --line: #4a1f5c;
+  --ink: #0a0410;
+  --accent: #ff7a30;
+  --accent-deep: #c94b00;
+  --accent-soft: rgba(255, 122, 48, 0.22);
+  --gold: #ffd230;
+  --gold-deep: #b88508;
+  --frame: #ff7a30;
+  --frame-cyan: #ff5fa8;
+  --pop: #ffa466;
+  --pole-left: #ff6a1a;
+  --pole-right: #ff3d97;
+  --group-1-main: #ff8a1a; --group-1-deep: #c05000;
+  --group-2-main: #ffc530; --group-2-deep: #a87a00;
+  --group-3-main: #ff3d97; --group-3-deep: #b01060;
+  --group-4-main: #ff5566; --group-4-deep: #b01828;
+}
+
+/* ---- palette: ice (氷の洞窟: 白×青×シアン、深紺背景) ---- */
+:root[data-palette="ice"] {
+  --bg: #040814;
+  --bg-alt: #081024;
+  --panel: #0c1838;
+  --panel-alt: #122850;
+  --text: #f0f8ff;
+  --muted: #8ba8c4;
+  --line: #1e3560;
+  --ink: #020510;
+  --accent: #4fc3ff;
+  --accent-deep: #1565c0;
+  --accent-soft: rgba(79, 195, 255, 0.22);
+  --gold: #e0f0ff;
+  --gold-deep: #7a95b0;
+  --frame: #4fc3ff;
+  --frame-cyan: #ffffff;
+  --pop: #88e8ff;
+  --pole-left: #4fc3ff;
+  --pole-right: #00ffff;
+  --group-1-main: #00d4ff; --group-1-deep: #007aa8;
+  --group-2-main: #6ee0ff; --group-2-deep: #3080b0;
+  --group-3-main: #8fc0ff; --group-3-deep: #4075b0;
+  --group-4-main: #00f5d4; --group-4-deep: #008874;
+}
+
+/* ---- palette: blood-moon (血月: 深赤×オレンジ×琥珀、黒背景) ---- */
+:root[data-palette="blood-moon"] {
+  --bg: #120406;
+  --bg-alt: #1a080a;
+  --panel: #260a0e;
+  --panel-alt: #3a1014;
+  --text: #fff0eb;
+  --muted: #9c7070;
+  --line: #4d1a20;
+  --ink: #0a0204;
+  --accent: #ff2040;
+  --accent-deep: #a00820;
+  --accent-soft: rgba(255, 32, 64, 0.22);
+  --gold: #ffae00;
+  --gold-deep: #a86500;
+  --frame: #ff2040;
+  --frame-cyan: #ff7a2e;
+  --pop: #ff4080;
+  --pole-left: #ff1a40;
+  --pole-right: #ff9020;
+  --group-1-main: #ff2040; --group-1-deep: #a00820;
+  --group-2-main: #ff5020; --group-2-deep: #a83010;
+  --group-3-main: #ff8e1a; --group-3-deep: #a85a00;
+  --group-4-main: #c01030; --group-4-deep: #700812;
+}
+
+/* ---- palette: vaporwave (80年代ポップ: ピンク×シアン×紫) ---- */
+:root[data-palette="vaporwave"] {
+  --bg: #130a28;
+  --bg-alt: #1c0e38;
+  --panel: #25134a;
+  --panel-alt: #341e60;
+  --text: #ffeffa;
+  --muted: #ac9fc8;
+  --line: #462d70;
+  --ink: #09051a;
+  --accent: #ff6ec7;
+  --accent-deep: #b82d8e;
+  --accent-soft: rgba(255, 110, 199, 0.22);
+  --gold: #ffe088;
+  --gold-deep: #b89858;
+  --frame: #ff6ec7;
+  --frame-cyan: #5eeaff;
+  --pop: #c080ff;
+  --pole-left: #ff6ec7;
+  --pole-right: #5eeaff;
+  --group-1-main: #ff6ec7; --group-1-deep: #b82d8e;
+  --group-2-main: #c080ff; --group-2-deep: #7040c8;
+  --group-3-main: #5eeaff; --group-3-deep: #1c90b8;
+  --group-4-main: #88ffd8; --group-4-deep: #3ea888;
 }
 
 * { box-sizing: border-box; }
@@ -33,9 +251,9 @@ html, body {
   color: var(--text);
   line-height: 1.75;
   background:
-    radial-gradient(ellipse at 15% 5%, rgba(255, 46, 107, 0.24), transparent 55%),
-    radial-gradient(ellipse at 85% 95%, rgba(0, 234, 255, 0.18), transparent 55%),
-    radial-gradient(ellipse at 50% 50%, rgba(255, 230, 58, 0.05), transparent 70%),
+    radial-gradient(ellipse at 15% 5%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 55%),
+    radial-gradient(ellipse at 85% 95%, color-mix(in srgb, var(--pole-right) 18%, transparent), transparent 55%),
+    radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--gold) 5%, transparent), transparent 70%),
     var(--bg);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
@@ -48,8 +266,8 @@ body::before {
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 46, 107, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 234, 255, 0.045) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--accent) 4.5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--pole-right) 4.5%, transparent) 1px, transparent 1px);
   background-size: 42px 42px;
   pointer-events: none;
   z-index: 0;
@@ -65,7 +283,7 @@ body::after {
   box-shadow:
     0 0 12px var(--accent),
     0 0 28px var(--pole-right),
-    0 0 48px rgba(255, 230, 58, 0.4);
+    0 0 48px color-mix(in srgb, var(--gold) 40%, transparent);
 }
 
 .app {
@@ -159,8 +377,8 @@ body::after {
   padding: 30px 28px;
   box-shadow:
     0 0 24px var(--accent-soft),
-    0 0 60px rgba(255, 46, 107, 0.12),
-    4px 4px 0 rgba(255, 46, 107, 0.25);
+    0 0 60px color-mix(in srgb, var(--accent) 12%, transparent),
+    4px 4px 0 color-mix(in srgb, var(--accent) 25%, transparent);
   margin-bottom: 36px;
   position: relative;
 }
@@ -177,12 +395,12 @@ body::after {
 .lead::before {
   left: 24px;
   background: var(--gold);
-  box-shadow: 0 0 12px var(--gold), 0 0 24px rgba(255, 230, 58, 0.5);
+  box-shadow: 0 0 12px var(--gold), 0 0 24px color-mix(in srgb, var(--gold) 50%, transparent);
 }
 .lead::after {
   left: 60px;
   background: var(--accent);
-  box-shadow: 0 0 12px var(--accent), 0 0 24px rgba(255, 46, 107, 0.5);
+  box-shadow: 0 0 12px var(--accent), 0 0 24px color-mix(in srgb, var(--accent) 50%, transparent);
 }
 
 .lead p { margin: 0 0 14px; font-size: 15px; }
@@ -203,7 +421,7 @@ body::after {
   font-size: 13px;
   letter-spacing: 0.22em;
   color: var(--gold);
-  text-shadow: 0 0 8px var(--gold), 0 0 18px rgba(255, 230, 58, 0.3);
+  text-shadow: 0 0 8px var(--gold), 0 0 18px color-mix(in srgb, var(--gold) 30%, transparent);
 }
 .axes-heading::before,
 .axes-heading::after {
@@ -295,9 +513,9 @@ body::after {
   min-width: clamp(80px, 24vw, 180px);
   background:
     linear-gradient(180deg,
-      rgba(52, 28, 96, 0.92) 0%,
-      rgba(26, 13, 50, 0.96) 50%,
-      rgba(52, 28, 96, 0.92) 100%);
+      color-mix(in srgb, var(--panel-alt) 92%, transparent) 0%,
+      color-mix(in srgb, var(--panel) 96%, transparent) 50%,
+      color-mix(in srgb, var(--panel-alt) 92%, transparent) 100%);
   color: var(--gold);
   justify-self: center;
   align-self: center;
@@ -312,15 +530,15 @@ body::after {
   filter:
     drop-shadow(0 0 4px var(--gold))
     drop-shadow(0 0 14px var(--gold))
-    drop-shadow(0 0 32px rgba(255, 230, 58, 0.55))
-    drop-shadow(0 0 60px rgba(255, 230, 58, 0.22));
+    drop-shadow(0 0 32px color-mix(in srgb, var(--gold) 55%, transparent))
+    drop-shadow(0 0 60px color-mix(in srgb, var(--gold) 22%, transparent));
   position: relative;
   z-index: 2;
   margin: 0;
   text-shadow:
     0 0 6px var(--gold),
     0 0 14px var(--gold),
-    0 0 28px rgba(255, 230, 58, 0.55);
+    0 0 28px color-mix(in srgb, var(--gold) 55%, transparent);
 }
 .axes-intro .vs strong {
   font-family: var(--display);
@@ -361,7 +579,7 @@ body::after {
   cursor: pointer;
   box-shadow:
     0 0 14px var(--accent-soft),
-    0 0 32px rgba(255, 46, 107, 0.15);
+    0 0 32px color-mix(in srgb, var(--accent) 15%, transparent);
   transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease, border-color 0.15s ease;
 }
 .btn:hover {
@@ -369,7 +587,7 @@ body::after {
   transform: translate(-1px, -1px);
   box-shadow:
     0 0 20px var(--accent),
-    0 0 44px rgba(255, 46, 107, 0.35);
+    0 0 44px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 .btn:active {
   transform: translate(1px, 1px);
@@ -379,7 +597,7 @@ body::after {
   opacity: 0.3;
   cursor: not-allowed;
   transform: none;
-  box-shadow: 0 0 6px rgba(255, 46, 107, 0.2);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 .btn-primary {
@@ -392,15 +610,15 @@ body::after {
   text-shadow: 0 0 10px #fff, 0 0 20px var(--gold);
   box-shadow:
     0 0 20px var(--accent),
-    0 0 48px rgba(255, 46, 107, 0.55),
-    inset 0 0 20px rgba(255, 230, 58, 0.15);
+    0 0 48px color-mix(in srgb, var(--accent) 55%, transparent),
+    inset 0 0 20px color-mix(in srgb, var(--gold) 15%, transparent);
 }
 .btn-primary:hover {
-  background: #ff4080;
+  background: var(--pop);
   box-shadow:
     0 0 28px var(--accent),
-    0 0 64px rgba(255, 46, 107, 0.7),
-    inset 0 0 24px rgba(255, 230, 58, 0.22);
+    0 0 64px color-mix(in srgb, var(--accent) 70%, transparent),
+    inset 0 0 24px color-mix(in srgb, var(--gold) 22%, transparent);
 }
 
 .btn-row {
@@ -444,7 +662,7 @@ body::after {
   transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow:
     0 0 14px var(--accent),
-    0 0 28px rgba(255, 46, 107, 0.5);
+    0 0 28px color-mix(in srgb, var(--accent) 50%, transparent);
 }
 
 .question {
@@ -454,7 +672,7 @@ body::after {
   padding: 40px 30px 32px;
   box-shadow:
     0 0 24px var(--accent-soft),
-    0 0 60px rgba(255, 46, 107, 0.10);
+    0 0 60px color-mix(in srgb, var(--accent) 10%, transparent);
   margin-bottom: 28px;
   position: relative;
 }
@@ -470,7 +688,7 @@ body::after {
   font-size: 12px;
   letter-spacing: 0.2em;
   border: 1.5px solid var(--gold);
-  box-shadow: 0 0 14px var(--gold), 0 0 28px rgba(255, 230, 58, 0.4);
+  box-shadow: 0 0 14px var(--gold), 0 0 28px color-mix(in srgb, var(--gold) 40%, transparent);
   text-shadow: 0 0 8px var(--gold);
 }
 .question-prompt {
@@ -506,12 +724,12 @@ body::after {
 .choice-display.choice-a {
   transform: rotate(-0.6deg);
   border-color: var(--accent);
-  box-shadow: 0 0 16px rgba(255, 46, 107, 0.28);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 28%, transparent);
 }
 .choice-display.choice-b {
   transform: rotate(0.6deg);
   border-color: var(--pole-right);
-  box-shadow: 0 0 16px rgba(0, 234, 255, 0.28);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--pole-right) 28%, transparent);
 }
 .choice-display .choice-label {
   flex: 0 0 auto;
@@ -526,14 +744,14 @@ body::after {
   font-family: var(--display);
   font-size: 16px;
   border: 2px solid var(--accent);
-  box-shadow: 0 0 12px var(--accent), inset 0 0 8px rgba(255, 230, 58, 0.3);
+  box-shadow: 0 0 12px var(--accent), inset 0 0 8px color-mix(in srgb, var(--gold) 30%, transparent);
   text-shadow: 0 0 8px var(--gold);
 }
 .choice-display.choice-b .choice-label {
   background: var(--ink);
   color: var(--pole-right);
   border-color: var(--pole-right);
-  box-shadow: 0 0 12px var(--pole-right), inset 0 0 8px rgba(0, 234, 255, 0.3);
+  box-shadow: 0 0 12px var(--pole-right), inset 0 0 8px color-mix(in srgb, var(--pole-right) 30%, transparent);
   text-shadow: 0 0 8px var(--pole-right);
 }
 .choice-display .choice-text { flex: 1; font-weight: 500; }
@@ -607,7 +825,7 @@ body::after {
   color: var(--text);
   border-color: var(--gold);
   transform: translate(-1px, -1px);
-  box-shadow: 0 0 14px var(--gold), 0 0 28px rgba(255, 230, 58, 0.3);
+  box-shadow: 0 0 14px var(--gold), 0 0 28px color-mix(in srgb, var(--gold) 30%, transparent);
   outline: none;
 }
 .likert-btn.is-hover .likert-dot,
@@ -743,7 +961,7 @@ body::after {
   margin: 18px 0 10px;
   color: var(--gold);
   letter-spacing: 0.04em;
-  text-shadow: 0 0 12px var(--gold), 0 0 24px rgba(255, 230, 58, 0.4);
+  text-shadow: 0 0 12px var(--gold), 0 0 24px color-mix(in srgb, var(--gold) 40%, transparent);
 }
 .result-group {
   display: flex;
@@ -833,7 +1051,7 @@ body::after {
 .result-section p strong {
   color: var(--pole-left);
   font-weight: 700;
-  text-shadow: 0 0 8px rgba(255, 26, 107, 0.45);
+  text-shadow: 0 0 8px color-mix(in srgb, var(--pole-left) 45%, transparent);
 }
 
 .axis-row { margin-bottom: 28px; }
@@ -854,7 +1072,7 @@ body::after {
   font-size: clamp(11px, 2vw, 15px);
   letter-spacing: clamp(0.06em, 0.15vw, 0.1em);
   color: var(--gold);
-  text-shadow: 0 0 10px var(--gold), 0 0 22px rgba(255, 230, 58, 0.35);
+  text-shadow: 0 0 10px var(--gold), 0 0 22px color-mix(in srgb, var(--gold) 35%, transparent);
 }
 .axis-row[data-winner-side="left"]  { --pole-color: var(--pole-left); }
 .axis-row[data-winner-side="right"] { --pole-color: var(--pole-right); }
@@ -1023,7 +1241,7 @@ footer.site-foot::after {
   padding: 32px 30px;
   box-shadow:
     0 0 24px var(--accent-soft),
-    0 0 60px rgba(255, 46, 107, 0.10);
+    0 0 60px color-mix(in srgb, var(--accent) 10%, transparent);
   margin-bottom: 24px;
 }
 .doc-intro {
@@ -1079,7 +1297,7 @@ footer.site-foot::after {
 .doc-meta {
   margin: 24px 0 0;
   padding: 18px 22px;
-  background: rgba(5, 1, 15, 0.4);
+  background: color-mix(in srgb, var(--ink) 40%, transparent);
   border: 1px solid var(--line);
   border-radius: 12px;
   font-size: 13px;
@@ -1138,7 +1356,7 @@ footer.site-foot::after {
   display: none;
   align-items: center;
   justify-content: center;
-  background: rgba(5, 1, 15, 0.92);
+  background: color-mix(in srgb, var(--ink) 92%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   z-index: 150;
@@ -1209,7 +1427,7 @@ footer.site-foot::after {
 .share-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(5, 1, 15, 0.82);
+  background: color-mix(in srgb, var(--ink) 82%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -1225,7 +1443,7 @@ footer.site-foot::after {
   overflow-y: auto;
   box-shadow:
     0 0 40px var(--accent),
-    0 0 80px rgba(255, 46, 107, 0.35);
+    0 0 80px color-mix(in srgb, var(--accent) 35%, transparent);
   animation: slideIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .share-title {
@@ -1280,7 +1498,7 @@ footer.site-foot::after {
   background: var(--accent);
   color: #fff;
   border-color: var(--gold);
-  box-shadow: 0 0 14px var(--accent), 0 0 28px rgba(255, 46, 107, 0.4);
+  box-shadow: 0 0 14px var(--accent), 0 0 28px color-mix(in srgb, var(--accent) 40%, transparent);
   text-shadow: 0 0 6px #fff;
 }
 
@@ -1290,7 +1508,7 @@ footer.site-foot::after {
   border-radius: 14px;
   overflow: hidden;
   border: 2px solid var(--gold);
-  box-shadow: 0 0 24px rgba(255, 230, 58, 0.25);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--gold) 25%, transparent);
   min-height: 200px;
   background: var(--ink);
   display: flex;
@@ -1329,7 +1547,7 @@ footer.site-foot::after {
   color: var(--ink);
   border-color: var(--gold);
   text-shadow: none;
-  box-shadow: 0 0 20px var(--gold), 0 0 48px rgba(255, 230, 58, 0.55);
+  box-shadow: 0 0 20px var(--gold), 0 0 48px color-mix(in srgb, var(--gold) 55%, transparent);
   pointer-events: none;
 }
 .share-hint {
