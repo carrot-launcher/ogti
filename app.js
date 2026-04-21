@@ -160,10 +160,24 @@ function buildArrowBadge(title) {
 }
 
 // テーマ/配色を <html> の data 属性に反映 (ページ種別を問わず先に適用)
+// styles.css に定義されているパレット一覧。config.palette が 'random' の場合や
+// 配列で渡された場合の候補となる。新パレット追加時はここにも追記すること。
+const KNOWN_PALETTES = [
+  'red-blue', 'lime-magenta', 'matrix',
+  'sunset', 'ice', 'blood-moon', 'vaporwave',
+];
+
+function resolvePalette(spec) {
+  if (Array.isArray(spec))  return spec[Math.floor(Math.random() * spec.length)];
+  if (spec === 'random')    return KNOWN_PALETTES[Math.floor(Math.random() * KNOWN_PALETTES.length)];
+  return spec;
+}
+
 function applyThemeAndPalette() {
   const root = document.documentElement;
-  if (config.theme)   root.dataset.theme   = config.theme;
-  if (config.palette) root.dataset.palette = config.palette;
+  if (config.theme) root.dataset.theme = config.theme;
+  const palette = resolvePalette(config.palette);
+  if (palette) root.dataset.palette = palette;
 }
 applyThemeAndPalette();
 

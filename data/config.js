@@ -9,11 +9,17 @@ export const config = {
   // ---- テーマ / 配色 ----
   // styles.css の :root[data-theme="..."] / :root[data-palette="..."] を指定する。
   //   theme   = 構造レイヤー (フォント・角丸など)
-  //   palette = 配色レイヤー (色トークンのみ)
+  //   palette = UI配色レイヤー (色トークン。結果の意味色 group-N は含まない)
   // app.js が <html> の data-theme / data-palette 属性に反映する。
+  //
+  // palette の指定:
+  //   'red-blue' / 'matrix' 等 — 固定パレット
+  //   'random'               — ロードごとに KNOWN_PALETTES からランダム
+  //   ['matrix', 'sunset']   — 配列ならその中からランダム
+  //
   // 利用可能なプリセットは styles.css 冒頭を参照。
   theme:   'neon',
-  palette: 'red-blue',
+  palette: 'random',
 
   // ---- ブランド ----
   brand: {

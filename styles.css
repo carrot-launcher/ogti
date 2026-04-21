@@ -1,18 +1,30 @@
 /* ============================================================
- * Theme / Palette プリセット (2軸直交)
+ * Theme / Palette / Group プリセット (3レイヤー)
  *
  *   theme   = 構造レイヤー (フォント・角丸など。色を持たない)
- *   palette = 配色レイヤー (色トークンのみ)
+ *   palette = UI配色レイヤー (色トークン、ロードごとにランダム可)
+ *   group   = 診断結果の意味を持つセマンティック色 (固定)
  *
- * config.js の theme / palette が <html data-theme data-palette> に
+ * theme / palette は config.js から <html data-theme data-palette> に
  * 反映され、以下のブロックから該当プリセットが選ばれる。
  *
- * 新プリセットを追加するときは、同じ変数名を埋めた別ブロックを
- * 下に足すだけで動く。
+ * group 色は「第1軸×第2軸のどのファミリか」を伝えるマーカーなので、
+ * UIパレットで変わってはならない。:root 直下に固定で置く。
  *
- * 組み合わせは自由だが、全組み合わせが映えるとは限らない
- * (例: neon + 低彩度パレットは光らない)。
+ * 新パレットを追加するときは :root[data-palette="..."] ブロックを
+ * 足すだけで動く。group 色は触らないこと。
  * ============================================================ */
+
+/* ---- group 色 (診断結果のセマンティック色・固定) ----
+   タイプコード先頭2文字 = 第1軸×第2軸の4パターン。
+   インデックス順: config.axes[0].left + config.axes[1].left から
+   left-left / left-right / right-left / right-right */
+:root {
+  --group-1-main: #ff2e8c; --group-1-deep: #c01860;
+  --group-2-main: #ff7a1a; --group-2-deep: #c95200;
+  --group-3-main: #a44dff; --group-3-deep: #6a1fb8;
+  --group-4-main: #00c8ff; --group-4-deep: #008fb8;
+}
 
 /* ---- base fallback (data 属性なしでも動くデフォルト = neon + red-blue) ---- */
 :root {
@@ -42,13 +54,6 @@
   --pop: #ff66b3;
   --pole-left: #ff1a6b;
   --pole-right: #00eaff;
-  /* グループ色 (タイプコード先頭2文字 = 第1軸×第2軸の4パターン)
-     インデックス順は config.axes[0].left + config.axes[1].left から
-     left-left / left-right / right-left / right-right */
-  --group-1-main: #ff2e8c; --group-1-deep: #c01860;
-  --group-2-main: #ff7a1a; --group-2-deep: #c95200;
-  --group-3-main: #a44dff; --group-3-deep: #6a1fb8;
-  --group-4-main: #00c8ff; --group-4-deep: #008fb8;
 }
 
 /* ---- theme: neon (構造・フォント・角丸) ---- */
@@ -80,10 +85,6 @@
   --pop: #ff66b3;
   --pole-left: #ff1a6b;
   --pole-right: #00eaff;
-  --group-1-main: #ff2e8c; --group-1-deep: #c01860;
-  --group-2-main: #ff7a1a; --group-2-deep: #c95200;
-  --group-3-main: #a44dff; --group-3-deep: #6a1fb8;
-  --group-4-main: #00c8ff; --group-4-deep: #008fb8;
 }
 
 /* ---- palette: lime-magenta (黄緑×紫のネオン) ---- */
@@ -106,10 +107,6 @@
   --pop: #a8ff66;
   --pole-left: #d0ff2e;
   --pole-right: #ff4fd8;
-  --group-1-main: #c8ff2e; --group-1-deep: #7ac000;
-  --group-2-main: #2effa0; --group-2-deep: #00a565;
-  --group-3-main: #ff4fd8; --group-3-deep: #b01e95;
-  --group-4-main: #c478ff; --group-4-deep: #7a2fbc;
 }
 
 /* ---- palette: matrix (映画 The Matrix 風、全面緑) ---- */
@@ -132,10 +129,6 @@
   --pop: #66ff99;
   --pole-left: #00ff41;
   --pole-right: #00ffaa;
-  --group-1-main: #00ff66; --group-1-deep: #008833;
-  --group-2-main: #aaff00; --group-2-deep: #5c8800;
-  --group-3-main: #00ffcc; --group-3-deep: #00886a;
-  --group-4-main: #66ff99; --group-4-deep: #338855;
 }
 
 /* ---- palette: sunset (夕焼け: オレンジ×マゼンタ×金、藍背景) ---- */
@@ -158,10 +151,6 @@
   --pop: #ffa466;
   --pole-left: #ff6a1a;
   --pole-right: #ff3d97;
-  --group-1-main: #ff8a1a; --group-1-deep: #c05000;
-  --group-2-main: #ffc530; --group-2-deep: #a87a00;
-  --group-3-main: #ff3d97; --group-3-deep: #b01060;
-  --group-4-main: #ff5566; --group-4-deep: #b01828;
 }
 
 /* ---- palette: ice (氷の洞窟: 白×青×シアン、深紺背景) ---- */
@@ -184,10 +173,6 @@
   --pop: #88e8ff;
   --pole-left: #4fc3ff;
   --pole-right: #00ffff;
-  --group-1-main: #00d4ff; --group-1-deep: #007aa8;
-  --group-2-main: #6ee0ff; --group-2-deep: #3080b0;
-  --group-3-main: #8fc0ff; --group-3-deep: #4075b0;
-  --group-4-main: #00f5d4; --group-4-deep: #008874;
 }
 
 /* ---- palette: blood-moon (血月: 深赤×オレンジ×琥珀、黒背景) ---- */
@@ -210,10 +195,6 @@
   --pop: #ff4080;
   --pole-left: #ff1a40;
   --pole-right: #ff9020;
-  --group-1-main: #ff2040; --group-1-deep: #a00820;
-  --group-2-main: #ff5020; --group-2-deep: #a83010;
-  --group-3-main: #ff8e1a; --group-3-deep: #a85a00;
-  --group-4-main: #c01030; --group-4-deep: #700812;
 }
 
 /* ---- palette: vaporwave (80年代ポップ: ピンク×シアン×紫) ---- */
@@ -236,10 +217,6 @@
   --pop: #c080ff;
   --pole-left: #ff6ec7;
   --pole-right: #5eeaff;
-  --group-1-main: #ff6ec7; --group-1-deep: #b82d8e;
-  --group-2-main: #c080ff; --group-2-deep: #7040c8;
-  --group-3-main: #5eeaff; --group-3-deep: #1c90b8;
-  --group-4-main: #88ffd8; --group-4-deep: #3ea888;
 }
 
 * { box-sizing: border-box; }
