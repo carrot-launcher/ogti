@@ -521,18 +521,19 @@ body::after {
   position: absolute;
   top: -14px;
   width: 28px; height: 28px;
-  border: 2.5px solid var(--frame);
   border-radius: 50%;
   z-index: 2;
 }
 .lead::before {
   left: 24px;
   background: var(--gold);
+  border: 2.5px solid var(--gold);
   box-shadow: 0 0 12px var(--gold), 0 0 24px color-mix(in srgb, var(--gold) 50%, transparent);
 }
 .lead::after {
   left: 60px;
   background: var(--accent);
+  border: 2.5px solid var(--accent);
   box-shadow: 0 0 12px var(--accent), 0 0 24px color-mix(in srgb, var(--accent) 50%, transparent);
 }
 
