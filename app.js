@@ -554,23 +554,21 @@ function launchConfetti() {
 }
 
 async function finish() {
-  // フェードアウト → 待機 → 結果表示 → フェードイン で「結果を待つ一瞬」の間合いを作る
+  // スゥ…とフェードアウト → 暗転 → 結果画面を一瞬で表示 (ネオンフリッカーが「点灯」を担う)
   const app = document.querySelector('.app');
-  app.style.transitionDuration = '300ms';
+  app.style.transitionDuration = '750ms';
   app.classList.add('is-transitioning');
-  await new Promise((r) => setTimeout(r, 300));   // fade out
-  await new Promise((r) => setTimeout(r, 200));   // 無音の待機
+  await new Promise((r) => setTimeout(r, 750));   // slow smooth fade out
+  await new Promise((r) => setTimeout(r, 400));   // 完全に暗転した静止時間
   renderResult();
   renderTypeIndex();
   show('result');
-  // 描画完了を待ってからフェードインに入る
+  // 描画完了を待って、appを瞬時に可視化 (画面の neonFlicker が点灯演出を担当)
   await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-  app.style.transitionDuration = '300ms';
+  app.style.transitionDuration = '0ms';
   app.classList.remove('is-transitioning');
-  setTimeout(() => {
-    app.style.transitionDuration = '';
-    launchConfetti();
-  }, 100);
+  // 次の transition はデフォルト値に戻す
+  setTimeout(() => { app.style.transitionDuration = ''; }, 50);
 }
 
 function restart() {
