@@ -73,14 +73,14 @@
 
       <div id="result-sections"></div>
 
-      <div class="type-index-section">
-        <h3>他のタイプを見る</h3>
-        <div id="type-index" class="type-index"></div>
-      </div>
-
       <div class="btn-row">
         <button id="btn-share" class="btn" type="button">結果をシェア</button>
         <button id="btn-restart" class="btn btn-primary" type="button">もう一度診断する</button>
+      </div>
+
+      <div class="type-index-section">
+        <h3>他のタイプを見る</h3>
+        <div id="type-index" class="type-index"></div>
       </div>
     </section>
 
@@ -103,8 +103,8 @@
   <!-- Share modal -->
   <div class="share-modal" id="share-modal" hidden>
     <div class="share-backdrop" id="share-backdrop"></div>
+    <button class="share-close" id="share-close" type="button" aria-label="閉じる">×</button>
     <div class="share-card">
-      <button class="share-close" id="share-close" type="button" aria-label="閉じる">×</button>
       <h3 class="share-title">シェア用画像</h3>
       <div class="share-format-tabs" id="share-format-tabs">
         <button class="share-format-btn active" type="button" data-format="square">正方形</button>

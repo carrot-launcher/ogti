@@ -1712,14 +1712,16 @@ footer.site-foot::after {
   position: fixed;
   inset: 0;
   z-index: 200;
+  overflow-y: auto;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 20px;
+  -webkit-overflow-scrolling: touch;
 }
 .share-modal[hidden] { display: none; }
 .share-backdrop {
-  position: absolute;
+  position: fixed;  /* スクロールしても背景はビューポート全体を覆う */
   inset: 0;
   background: color-mix(in srgb, var(--ink) 82%, transparent);
   backdrop-filter: blur(10px);
@@ -1733,12 +1735,10 @@ footer.site-foot::after {
   padding: 32px 28px 26px;
   max-width: 560px;
   width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
+  margin: auto 0;  /* 内容が収まるときは縦中央、溢れるときはスクロール */
   box-shadow:
     0 0 40px var(--accent),
     0 0 80px color-mix(in srgb, var(--accent) 35%, transparent);
-  animation: slideIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .share-title {
   font-family: var(--chunky);
@@ -1750,9 +1750,9 @@ footer.site-foot::after {
   text-shadow: 0 0 10px var(--gold);
 }
 .share-close {
-  position: absolute;
-  top: 10px; right: 10px;
-  width: 36px; height: 36px;
+  position: fixed;  /* スクロールしても常にビューポート右上に固定 */
+  top: 14px; right: 14px;
+  width: 40px; height: 40px;
   border-radius: 50%;
   background: var(--ink);
   color: var(--text);
@@ -1760,9 +1760,15 @@ footer.site-foot::after {
   font-family: var(--chunky);
   font-size: 22px;
   line-height: 1;
+  padding: 0;
+  /* 字形の光学中心合わせ: × は若干左下寄りなので flex 中央 + 微調整 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   cursor: pointer;
   box-shadow: 0 0 10px var(--accent-soft);
-  z-index: 2;
+  z-index: 210;
 }
 .share-close:hover { background: var(--panel-alt); box-shadow: 0 0 14px var(--accent); }
 .share-format-tabs {
