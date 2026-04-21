@@ -812,7 +812,7 @@ body::after {
   content: 'お題';
   position: absolute;
   top: -16px; left: 28px;
-  background: var(--ink);
+  background: var(--panel-alt);
   color: var(--gold);
   font-family: var(--chunky);
   padding: 5px 16px;
@@ -846,7 +846,7 @@ body::after {
   padding: 18px 18px;
   display: flex;
   gap: 12px;
-  align-items: flex-start;
+  align-items: center;
   font-size: 15px;
   line-height: 1.7;
   color: var(--text);
@@ -868,19 +868,18 @@ body::after {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: var(--ink);
-  color: var(--gold);
+  background: var(--panel-alt);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-family: var(--display);
   font-size: 16px;
   border: 2px solid var(--accent);
-  box-shadow: 0 0 12px var(--accent), inset 0 0 8px color-mix(in srgb, var(--gold) 30%, transparent);
-  text-shadow: 0 0 8px var(--gold);
+  color: var(--accent);
+  box-shadow: 0 0 12px var(--accent), inset 0 0 8px color-mix(in srgb, var(--accent) 30%, transparent);
+  text-shadow: 0 0 8px var(--accent);
 }
 .choice-display.choice-b .choice-label {
-  background: var(--ink);
   color: var(--pole-right);
   border-color: var(--pole-right);
   box-shadow: 0 0 12px var(--pole-right), inset 0 0 8px color-mix(in srgb, var(--pole-right) 30%, transparent);
