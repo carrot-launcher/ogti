@@ -360,9 +360,14 @@ function renderResult() {
     el.className = 'result-section';
     const h3 = document.createElement('h3');
     h3.textContent = s.title;
-    const p = document.createElement('p');
-    p.textContent = body;
-    el.append(h3, p);
+    el.appendChild(h3);
+    for (const para of String(body).split(/\n{2,}/)) {
+      const trimmed = para.trim();
+      if (!trimmed) continue;
+      const p = document.createElement('p');
+      p.innerHTML = trimmed.replace(/\n/g, '<br>');
+      el.appendChild(p);
+    }
     sectionsEl.appendChild(el);
   }
 
@@ -732,7 +737,8 @@ async function generateShareCanvas(format = 'square') {
       ctx.fillStyle = '#faf8ff';
       ctx.shadowColor = 'rgba(255, 255, 255, 0.25)';
       ctx.shadowBlur = 6;
-      const lineCount = wrapJPTextTop(ctx, body, W / 2, y, W - 140, 52);
+      const plain = String(body).replace(/<[^>]+>/g, '').replace(/\n+/g, ' ').trim();
+      const lineCount = wrapJPTextTop(ctx, plain, W / 2, y, W - 140, 52);
       ctx.restore();
       y += lineCount * 52 + 50;
     }

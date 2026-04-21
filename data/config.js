@@ -90,19 +90,23 @@ export const config = {
 
   // ---- 結果画面のテキストセクション ----
   // key は types.js の各タイプオブジェクトのフィールド名と一致させる。
-  // 配列の順番が表示順 = セクションの追加・削除・並び替えはここで完結。
+  // 配列の順番が表示順。types.js 側の本文は "\n\n" で段落分割、<strong> 等の HTML 使用可。
   sections: [
+    { key: 'headline', title: 'ひとことで言うと' },
     { key: 'strength', title: 'ハマったときの強み' },
     { key: 'weakness', title: '滑るときの癖' },
     { key: 'partner',  title: '相性の良い相方' },
   ],
 
   // ---- シェア画像 (9:16 縦長) の下部セクション ----
-  // 結果カードの下に表示される簡単な診断文。
-  // 画面に収まるよう、本文は短く (essence: 60字程度、tip: 30字程度)。
+  // Canvas 描画のためプレーンテキストのみ (HTML や段落は使えない)。
+  // sections と key を共有すれば sections の内容を再利用できる。
   shareSections: [
-    { key: 'essence', title: '診断のエッセンス' },
-    { key: 'tip',     title: 'ひとこと' },
+    { key: 'headline',      title: 'ひとことで言うと' },
+    { key: 'strengthShort', title: 'ハマったときの強み' },
+    { key: 'weaknessShort', title: '滑るときの癖' },
+    { key: 'partnerShort',  title: '相性の良い相方' },
+    { key: 'tip',           title: '決め台詞' },
   ],
 
   // ---- 利用規約ページ用の情報 ----

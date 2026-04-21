@@ -828,7 +828,13 @@ body::after {
   border-radius: 99px;
   box-shadow: 0 0 8px var(--accent);
 }
-.result-section p { margin: 0; font-size: 15px; line-height: 1.95; color: var(--text); }
+.result-section p { margin: 0 0 14px; font-size: 15px; line-height: 1.95; color: var(--text); }
+.result-section p:last-child { margin-bottom: 0; }
+.result-section p strong {
+  color: var(--pole-left);
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(255, 26, 107, 0.45);
+}
 
 .axis-row { margin-bottom: 28px; }
 .axis-row:last-child { margin-bottom: 0; }
