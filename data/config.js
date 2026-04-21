@@ -97,6 +97,14 @@ export const config = {
     { key: 'partner',  title: '相性の良い相方' },
   ],
 
+  // ---- シェア画像 (9:16 縦長) の下部セクション ----
+  // 結果カードの下に表示される簡単な診断文。
+  // 画面に収まるよう、本文は短く (essence: 60字程度、tip: 30字程度)。
+  shareSections: [
+    { key: 'essence', title: '診断のエッセンス' },
+    { key: 'tip',     title: 'ひとこと' },
+  ],
+
   // ---- 利用規約ページ用の情報 ----
   ownership: {
     orgName:      'OGTI 運営 (個人)',                                     // 規約表示の運営者名

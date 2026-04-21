@@ -488,14 +488,44 @@ function wrapJPText(ctx, text, x, y, maxWidth, lineHeight) {
   return lines.length;
 }
 
-async function generateShareCanvas() {
+// 上揃え版 (topY から下に伸びる)。行数を返す。
+function wrapJPTextTop(ctx, text, x, topY, maxWidth, lineHeight) {
+  const lines = [];
+  let line = '';
+  for (const ch of text) {
+    const test = line + ch;
+    if (ctx.measureText(test).width > maxWidth && line.length > 0) {
+      lines.push(line);
+      line = ch;
+    } else {
+      line = test;
+    }
+  }
+  if (line) lines.push(line);
+  lines.forEach((l, i) => ctx.fillText(l, x, topY + i * lineHeight));
+  return lines.length;
+}
+
+async function generateShareCanvas(format = 'square') {
   const { code } = computeResult();
   const t = types[code];
   const group = code.substring(0, 2);
   const subGroup = code.substring(2, 4);
   const gc = GROUP_COLORS[group];
 
-  const W = 1080, H = 1080;
+  const isPortrait = format === 'portrait';
+  const W = 1080;
+  const H = isPortrait ? 1920 : 1080;
+
+  // カード (結果情報が入る領域)
+  // 縦長では上端寄せで高さ控えめ → 下の share sections に余白を譲る
+  const cardX = isPortrait ? 40 : 36;
+  const cardY = isPortrait ? 40 : 36;
+  const cardW = W - cardX * 2;
+  const cardH = isPortrait ? 518 : H - cardY * 2;
+  const cardCx = W / 2;
+  const cardCy = cardY + cardH / 2;
+
   const canvas = document.createElement('canvas');
   canvas.width = W;
   canvas.height = H;
@@ -547,16 +577,16 @@ async function generateShareCanvas() {
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
   }
 
-  // ---- Watermark symbol ----
+  // ---- Watermark symbol (カード中心に描画) ----
   // iOS Safari で globalAlpha + shadowBlur が不安定なので rgba() で直接指定
   ctx.save();
-  ctx.font = '720px "Rampart One"';
+  ctx.font = `${isPortrait ? 540 : 720}px "Rampart One"`;
   ctx.fillStyle = hexToRgba(gc.main, 0.14);
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.shadowColor = hexToRgba(gc.main, 0.25);
   ctx.shadowBlur = 50;
-  ctx.fillText(t.symbol, W / 2, H / 2);
+  ctx.fillText(t.symbol, cardCx, cardCy);
   ctx.restore();
 
   // ---- Card border ----
@@ -565,15 +595,15 @@ async function generateShareCanvas() {
   ctx.lineWidth = 6;
   ctx.shadowColor = gc.main;
   ctx.shadowBlur = 30;
-  roundRectPath(ctx, 36, 36, W - 72, H - 72, 36);
+  roundRectPath(ctx, cardX, cardY, cardW, cardH, 36);
   ctx.stroke();
   ctx.restore();
 
-  // ---- Type stamp (top-right kanji circle) ----
+  // ---- Type stamp (カード右上) ----
   ctx.save();
   const stampR = 84;
-  const stampCx = W - 160;
-  const stampCy = 168;
+  const stampCx = cardX + cardW - 124;
+  const stampCy = cardY + (isPortrait ? 110 : 132);
   // Filled tinted circle
   ctx.fillStyle = hexToRgba(gc.main, 0.12);
   ctx.beginPath();
@@ -604,50 +634,52 @@ async function generateShareCanvas() {
   ctx.fillText(t.symbol, 0, 4);
   ctx.restore();
 
-  // ---- Brand mark ----
+  // ---- Brand mark (縦長ではカード内の上部に配置) ----
   ctx.save();
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
   ctx.font = '64px "Rampart One"';
   const brandDisplay = config.brand.name + (config.brand.accent || '');
-  drawNeonText(ctx, brandDisplay, W / 2, 96, '#ff2e6b', '#ffe63a', 4);
+  drawNeonText(ctx, brandDisplay, W / 2, isPortrait ? cardY + 40 : 116, '#ff2e6b', '#ffe63a', 4);
   ctx.font = '15px "RocknRoll One"';
   ctx.fillStyle = '#00eaff';
   ctx.shadowColor = '#00eaff';
   ctx.shadowBlur = 10;
-  ctx.fillText(config.brand.subtitle, W / 2, 190);
+  ctx.fillText(config.brand.subtitle, W / 2, isPortrait ? cardY + 134 : 210);
   ctx.restore();
 
   // ---- Big code ----
   ctx.save();
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = '240px "Rampart One"';
-  drawNeonText(ctx, code, W / 2, 440, gc.main, '#ffe63a', 6);
+  ctx.font = `${isPortrait ? 200 : 240}px "Rampart One"`;
+  drawNeonText(ctx, code, W / 2, isPortrait ? cardY + 270 : 420, gc.main, '#ffe63a', 6);
   ctx.restore();
 
   // ---- Type name ----
   ctx.save();
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = 'bold 72px "Zen Maru Gothic"';
+  ctx.font = `bold ${isPortrait ? 60 : 72}px "Zen Maru Gothic"`;
   ctx.fillStyle = '#ffe63a';
   ctx.shadowColor = '#ffe63a';
   ctx.shadowBlur = 22;
-  ctx.fillText(t.name, W / 2, 620);
+  ctx.fillText(t.name, W / 2, isPortrait ? cardY + 435 : 650);
   ctx.restore();
 
-  // ---- Tagline (wrapped) ----
-  ctx.save();
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.font = '26px "Zen Maru Gothic"';
-  ctx.fillStyle = '#b8a9e0';
-  wrapJPText(ctx, t.tagline, W / 2, 720, W - 180, 44);
-  ctx.restore();
+  // ---- Tagline (wrapped) — 正方形のみ ----
+  if (!isPortrait) {
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '26px "Zen Maru Gothic"';
+    ctx.fillStyle = '#b8a9e0';
+    wrapJPText(ctx, t.tagline, W / 2, 750, W - 180, 44);
+    ctx.restore();
+  }
 
-  // ---- Group tags (optional) ----
-  if (config.groups.enabled) {
+  // ---- Group tags — 正方形のみ ----
+  if (!isPortrait && config.groups.enabled) {
     const g1n = config.groups.primary[group];
     const s1n = config.groups.sub[subGroup];
     if (g1n) {
@@ -658,7 +690,7 @@ async function generateShareCanvas() {
       ctx.fillStyle = gc.main;
       ctx.shadowColor = gc.main;
       ctx.shadowBlur = 14;
-      ctx.fillText(`${code[0]} × ${code[1]}  ${g1n.ja} / ${g1n.en}`, W / 2, 850);
+      ctx.fillText(`${code[0]} × ${code[1]}  ${g1n.ja} / ${g1n.en}`, W / 2, 880);
       ctx.restore();
     }
     if (s1n) {
@@ -669,8 +701,40 @@ async function generateShareCanvas() {
       ctx.fillStyle = 'rgba(250, 248, 255, 0.75)';
       ctx.shadowColor = 'rgba(255, 255, 255, 0.3)';
       ctx.shadowBlur = 6;
-      ctx.fillText(`${code[2]} × ${code[3]}  ${s1n.ja} / ${s1n.en}`, W / 2, 894);
+      ctx.fillText(`${code[2]} × ${code[3]}  ${s1n.ja} / ${s1n.en}`, W / 2, 924);
       ctx.restore();
+    }
+  }
+
+  // ---- Portrait-only: シェア用セクション (カード下部) ----
+  if (isPortrait) {
+    let y = cardY + cardH + 70;
+    const shareSecs = config.shareSections || [];
+    for (const s of shareSecs) {
+      const body = t[s.key];
+      if (!body) continue;
+      // 見出し
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.font = '30px "RocknRoll One"';
+      ctx.fillStyle = '#ffe63a';
+      ctx.shadowColor = '#ffe63a';
+      ctx.shadowBlur = 14;
+      ctx.fillText(s.title, W / 2, y);
+      ctx.restore();
+      y += 62;
+      // 本文
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.font = '32px "Zen Maru Gothic"';
+      ctx.fillStyle = '#faf8ff';
+      ctx.shadowColor = 'rgba(255, 255, 255, 0.25)';
+      ctx.shadowBlur = 6;
+      const lineCount = wrapJPTextTop(ctx, body, W / 2, y, W - 140, 52);
+      ctx.restore();
+      y += lineCount * 52 + 50;
     }
   }
 
@@ -680,30 +744,33 @@ async function generateShareCanvas() {
   ctx.textBaseline = 'middle';
   ctx.font = '18px "RocknRoll One"';
   ctx.fillStyle = 'rgba(147, 136, 184, 0.8)';
-  ctx.fillText(config.brand.hashtag, W / 2, 990);
+  ctx.fillText(config.brand.hashtag, W / 2, isPortrait ? 1870 : 990);
   ctx.restore();
 
   return canvas;
 }
 
 let shareBlob = null;
+let currentShareFormat = 'square';
 
-async function openShareModal() {
-  const modal = document.getElementById('share-modal');
+async function regenerateSharePreview() {
   const img = document.getElementById('share-image');
   const preview = document.querySelector('.share-preview');
   preview.classList.remove('ready');
   img.removeAttribute('src');
-  modal.hidden = false;
-
   try {
-    const canvas = await generateShareCanvas();
+    const canvas = await generateShareCanvas(currentShareFormat);
     img.src = canvas.toDataURL('image/png');
     preview.classList.add('ready');
     canvas.toBlob((blob) => { shareBlob = blob; }, 'image/png');
   } catch (e) {
     console.error('share image generation failed', e);
   }
+}
+
+async function openShareModal() {
+  document.getElementById('share-modal').hidden = false;
+  await regenerateSharePreview();
 }
 
 function closeShareModal() {
@@ -716,7 +783,8 @@ function downloadShare() {
   const url = URL.createObjectURL(shareBlob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${config.brand.name}_${code}.png`;
+  const suffix = currentShareFormat === 'portrait' ? '_9x16' : '_1x1';
+  a.download = `${config.brand.name}_${code}${suffix}.png`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 
@@ -744,6 +812,20 @@ document.getElementById('btn-share').addEventListener('click', openShareModal);
 document.getElementById('share-close').addEventListener('click', closeShareModal);
 document.getElementById('share-backdrop').addEventListener('click', closeShareModal);
 document.getElementById('share-download').addEventListener('click', downloadShare);
+
+// シェア画像フォーマット切替タブ
+document.querySelectorAll('.share-format-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const format = btn.dataset.format;
+    if (format === currentShareFormat) return;
+    currentShareFormat = format;
+    document.querySelectorAll('.share-format-btn').forEach((b) => {
+      b.classList.toggle('active', b.dataset.format === format);
+    });
+    regenerateSharePreview();
+  });
+});
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !document.getElementById('share-modal').hidden) closeShareModal();
 });
