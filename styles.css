@@ -428,7 +428,9 @@ body::after {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  transition: opacity 0.45s ease;
 }
+.app.is-transitioning { opacity: 0; }
 
 .screen { display: none; }
 .screen.active { display: block; animation: slideIn 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
