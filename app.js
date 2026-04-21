@@ -344,10 +344,36 @@ function emphasizeInitial(word) {
   return `<span class="pole-name"><span class="init">${word[0]}</span>${word.slice(1)}</span>`;
 }
 
-function renderResult() {
-  const { code, clarity } = computeResult();
+// 現在表示しているタイプコード。null なら本人の結果を表示中。
+let displayedCode = null;
+
+// タイプコード → グループindex(1..4)。第1軸×第2軸 の left/right 組合せで決まる。
+function groupIndexOf(code) {
+  const isLeft0 = code[0] === config.axes[0].left.pole;
+  const isLeft1 = code[1] === config.axes[1].left.pole;
+  if ( isLeft0 &&  isLeft1) return 1;
+  if ( isLeft0 && !isLeft1) return 2;
+  if (!isLeft0 &&  isLeft1) return 3;
+  return 4;
+}
+
+function renderResult(overrideCode = null) {
+  const computed = computeResult();
+  const code = overrideCode || computed.code;
+  // overrideCode 指定時は「このタイプの理想像」として軸を全て満タン表示
+  const clarity = overrideCode
+    ? Object.fromEntries(config.axes.map((a) => [a.key, 1]))
+    : computed.clarity;
   const t = types[code];
   const group = code.substring(0, 2);
+
+  const isBrowsing = overrideCode && overrideCode !== computed.code;
+  displayedCode = overrideCode;
+  const notice = document.getElementById('browse-notice');
+  const btnShare = document.getElementById('btn-share');
+  if (notice)   notice.hidden   = !isBrowsing;
+  // 「もう一度診断する」は常時見せる。シェアだけは他人のページで押せても意味が曖昧なので隠す
+  if (btnShare) btnShare.hidden =  isBrowsing;
 
   const card = document.getElementById('result-card');
   // グループ色をインラインで注入。
@@ -431,6 +457,41 @@ function renderResult() {
     `;
     axesEl.appendChild(row);
   }
+
+  // 現在表示中のカードを type-index 上でハイライト更新
+  const indexEl = document.getElementById('type-index');
+  if (indexEl) {
+    indexEl.querySelectorAll('.type-card').forEach((card) => {
+      card.classList.toggle('is-active', card.dataset.code === code);
+    });
+  }
+}
+
+// 結果画面下部の「他のタイプを見る」グリッド。16タイプのカードを出す。
+function renderTypeIndex() {
+  const indexEl = document.getElementById('type-index');
+  if (!indexEl) return;
+  const mineCode = computeResult().code;
+  indexEl.innerHTML = '';
+  for (const code of Object.keys(types)) {
+    const t = types[code];
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'type-card';
+    card.dataset.code = code;
+    card.dataset.group = String(groupIndexOf(code));
+    if (code === mineCode) card.classList.add('is-mine');
+    card.innerHTML = `
+      <span class="type-card-symbol">${escapeHtml(t.symbol)}</span>
+      <span class="type-card-code">${escapeHtml(code)}</span>
+      <span class="type-card-name">${escapeHtml(t.name)}</span>
+    `;
+    card.addEventListener('click', () => {
+      renderResult(code === mineCode ? null : code);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    indexEl.appendChild(card);
+  }
 }
 
 function launchConfetti() {
@@ -470,6 +531,7 @@ async function finish() {
   await new Promise((r) => setTimeout(r, 300));   // fade out
   await new Promise((r) => setTimeout(r, 200));   // 無音の待機
   renderResult();
+  renderTypeIndex();
   show('result');
   // 描画完了を待ってからフェードインに入る
   await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
@@ -880,6 +942,10 @@ function downloadShare() {
 document.getElementById('btn-start').addEventListener('click', startWithDrama);
 document.getElementById('btn-back').addEventListener('click', back);
 document.getElementById('btn-restart').addEventListener('click', restart);
+document.getElementById('btn-back-to-mine').addEventListener('click', () => {
+  renderResult();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 document.getElementById('btn-share').addEventListener('click', openShareModal);
 document.getElementById('share-close').addEventListener('click', closeShareModal);
 document.getElementById('share-backdrop').addEventListener('click', closeShareModal);

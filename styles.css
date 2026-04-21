@@ -761,6 +761,7 @@ body::after {
   margin-top: 36px;
   flex-wrap: wrap;
 }
+.btn-row[hidden] { display: none; }
 
 /* ---------- Quiz ---------- */
 
@@ -1004,6 +1005,137 @@ body::after {
 }
 
 /* ---------- Result ---------- */
+
+.browse-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  background: var(--panel);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  color: var(--gold);
+  font-family: var(--chunky);
+  font-size: 14px;
+  box-shadow: 0 0 16px color-mix(in srgb, var(--gold) 25%, transparent);
+}
+.browse-notice[hidden] { display: none; }
+.browse-notice > span {
+  text-shadow: 0 0 8px color-mix(in srgb, var(--gold) 50%, transparent);
+}
+.btn-small {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-family: var(--chunky);
+  background: var(--panel-alt);
+  color: var(--text);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-small:hover {
+  background: var(--accent-deep);
+  box-shadow: 0 0 12px var(--accent);
+}
+
+/* ---------- Type index (他のタイプ一覧) ---------- */
+
+.type-index-section {
+  margin: 32px 0 28px;
+}
+.type-index-section > h3 {
+  font-family: var(--chunky);
+  font-size: 15px;
+  color: var(--gold);
+  text-align: center;
+  letter-spacing: 0.08em;
+  margin: 0 0 16px;
+  text-shadow: 0 0 10px color-mix(in srgb, var(--gold) 45%, transparent);
+}
+.type-index {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+@media (max-width: 500px) {
+  .type-index { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+}
+.type-card {
+  --card-color: var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 8px 12px;
+  background: var(--panel);
+  border: 2px solid color-mix(in srgb, var(--card-color) 55%, transparent);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--body);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  text-align: center;
+}
+.type-card[data-group="1"] { --card-color: var(--group-1-main); }
+.type-card[data-group="2"] { --card-color: var(--group-2-main); }
+.type-card[data-group="3"] { --card-color: var(--group-3-main); }
+.type-card[data-group="4"] { --card-color: var(--group-4-main); }
+.type-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--card-color);
+  background: var(--panel-alt);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--card-color) 45%, transparent);
+}
+.type-card-symbol {
+  font-family: var(--display);
+  font-size: 32px;
+  line-height: 1;
+  color: var(--card-color);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--card-color) 55%, transparent);
+}
+.type-card-code {
+  font-family: var(--chunky);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  margin-top: 4px;
+}
+.type-card-name {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.3;
+}
+.type-card.is-mine {
+  border-color: var(--gold);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--gold) 40%, transparent);
+}
+.type-card.is-mine::before {
+  content: 'YOU';
+  position: absolute;
+  top: -8px;
+  right: 6px;
+  font-family: var(--chunky);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  padding: 2px 6px;
+  background: var(--gold);
+  color: var(--ink);
+  border-radius: 4px;
+}
+.type-card { position: relative; }
+.type-card.is-active {
+  background: var(--panel-alt);
+  border-color: var(--card-color);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--card-color) 55%, transparent);
+}
+.type-card.is-mine.is-active {
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--card-color) 55%, transparent),
+    0 0 14px color-mix(in srgb, var(--gold) 40%, transparent);
+}
 
 .result-card {
   --group-color: var(--accent);
