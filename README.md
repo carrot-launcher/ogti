@@ -42,6 +42,13 @@ palette: 'random',     // UI配色: 'red-blue' 等固定 / 'random' / ['matrix',
 | palette | `ice` | 氷の洞窟、白×青×シアン |
 | palette | `blood-moon` | 血月、深赤×オレンジ×琥珀 |
 | palette | `vaporwave` | 80年代ポップ、ピンク×シアン×紫 |
+| palette | `hacker` | 旧式CRTターミナルの琥珀 |
+| palette | `miami` | Miami Vice 80s、ホットピンク×ターコイズ |
+| palette | `aurora` | オーロラ、紫×緑×青 |
+| palette | `arcade` | アーケードゲーム、マゼンタ×シアン×イエロー |
+| palette | `lava` | 溶岩、赤×オレンジ×黄 |
+| palette | `deep-sea` | 深海、ターコイズ×深青 |
+| palette | `halloween` | ハロウィン、オレンジ×紫×妖緑 |
 
 組み合わせは自由ですが、全組み合わせが映えるとは限りません (例: 低彩度パレットはneonの発光と相性が悪い)。
 

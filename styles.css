@@ -219,6 +219,160 @@
   --pole-right: #5eeaff;
 }
 
+/* ---- palette: hacker (アンバーターミナル: 琥珀色の旧式 CRT) ---- */
+:root[data-palette="hacker"] {
+  --bg: #0a0604;
+  --bg-alt: #140a04;
+  --panel: #1e1004;
+  --panel-alt: #2d1808;
+  --text: #ffd49c;
+  --muted: #a07a4a;
+  --line: #3d2410;
+  --ink: #060200;
+  --accent: #ff9f00;
+  --accent-deep: #b86800;
+  --accent-soft: rgba(255, 159, 0, 0.22);
+  --gold: #ffcc44;
+  --gold-deep: #a88c20;
+  --frame: #ff9f00;
+  --frame-cyan: #ff7a1a;
+  --pop: #ffbe5e;
+  --pole-left: #ff9f00;
+  --pole-right: #ffc825;
+}
+
+/* ---- palette: miami (Miami Vice 80s: ホットピンク×ターコイズ) ---- */
+:root[data-palette="miami"] {
+  --bg: #1a0828;
+  --bg-alt: #250c38;
+  --panel: #301248;
+  --panel-alt: #421860;
+  --text: #fff0fa;
+  --muted: #bc9db8;
+  --line: #5a2570;
+  --ink: #0a0414;
+  --accent: #ff4fa8;
+  --accent-deep: #b82d7a;
+  --accent-soft: rgba(255, 79, 168, 0.22);
+  --gold: #fff8e0;
+  --gold-deep: #b8b088;
+  --frame: #ff4fa8;
+  --frame-cyan: #00e0d4;
+  --pop: #ff8ac8;
+  --pole-left: #ff4fa8;
+  --pole-right: #00e0d4;
+}
+
+/* ---- palette: aurora (オーロラ: 紫×緑×青、深紺背景) ---- */
+:root[data-palette="aurora"] {
+  --bg: #040814;
+  --bg-alt: #081224;
+  --panel: #0c1c38;
+  --panel-alt: #122850;
+  --text: #e8f5ff;
+  --muted: #8aa4c0;
+  --line: #1e3d60;
+  --ink: #02050c;
+  --accent: #aa4fff;
+  --accent-deep: #6820b0;
+  --accent-soft: rgba(170, 79, 255, 0.22);
+  --gold: #b8ffe0;
+  --gold-deep: #4a9075;
+  --frame: #aa4fff;
+  --frame-cyan: #4fffcc;
+  --pop: #c888ff;
+  --pole-left: #aa4fff;
+  --pole-right: #4fffcc;
+}
+
+/* ---- palette: arcade (アーケードゲーム: マゼンタ×シアン×イエロー) ---- */
+:root[data-palette="arcade"] {
+  --bg: #060612;
+  --bg-alt: #0a0a1e;
+  --panel: #101030;
+  --panel-alt: #1a1a48;
+  --text: #f8f8ff;
+  --muted: #9c9cc0;
+  --line: #2a2a60;
+  --ink: #030308;
+  --accent: #ff00aa;
+  --accent-deep: #b80078;
+  --accent-soft: rgba(255, 0, 170, 0.22);
+  --gold: #ffff00;
+  --gold-deep: #a8a800;
+  --frame: #ff00aa;
+  --frame-cyan: #00ffff;
+  --pop: #ff5fc8;
+  --pole-left: #ff00aa;
+  --pole-right: #00ffff;
+}
+
+/* ---- palette: lava (溶岩: 赤×オレンジ×黄、暗黒背景) ---- */
+:root[data-palette="lava"] {
+  --bg: #0a0402;
+  --bg-alt: #140604;
+  --panel: #1a0808;
+  --panel-alt: #2a0e08;
+  --text: #fff5e8;
+  --muted: #a07058;
+  --line: #481810;
+  --ink: #060200;
+  --accent: #ff4500;
+  --accent-deep: #a82800;
+  --accent-soft: rgba(255, 69, 0, 0.22);
+  --gold: #ffd700;
+  --gold-deep: #b89500;
+  --frame: #ff4500;
+  --frame-cyan: #ff7a00;
+  --pop: #ff7a2e;
+  --pole-left: #ff2a00;
+  --pole-right: #ffae00;
+}
+
+/* ---- palette: deep-sea (深海: ターコイズ×深青×青白) ---- */
+:root[data-palette="deep-sea"] {
+  --bg: #020810;
+  --bg-alt: #041020;
+  --panel: #081830;
+  --panel-alt: #102848;
+  --text: #d0f0ff;
+  --muted: #6590b0;
+  --line: #1a3560;
+  --ink: #010408;
+  --accent: #00d8c0;
+  --accent-deep: #007a70;
+  --accent-soft: rgba(0, 216, 192, 0.22);
+  --gold: #88eaff;
+  --gold-deep: #4888a8;
+  --frame: #00d8c0;
+  --frame-cyan: #4fa8ff;
+  --pop: #44f0d8;
+  --pole-left: #00d8c0;
+  --pole-right: #4fa8ff;
+}
+
+/* ---- palette: halloween (ハロウィン: オレンジ×紫×妖緑) ---- */
+:root[data-palette="halloween"] {
+  --bg: #0a0410;
+  --bg-alt: #140818;
+  --panel: #1e0c28;
+  --panel-alt: #2a1440;
+  --text: #fff4e0;
+  --muted: #9c8898;
+  --line: #3c2048;
+  --ink: #05020a;
+  --accent: #ff7a00;
+  --accent-deep: #b85200;
+  --accent-soft: rgba(255, 122, 0, 0.22);
+  --gold: #a8ff4f;
+  --gold-deep: #5c9c1e;
+  --frame: #ff7a00;
+  --frame-cyan: #a040ff;
+  --pop: #ffa440;
+  --pole-left: #ff7a00;
+  --pole-right: #a040ff;
+}
+
 * { box-sizing: border-box; }
 
 html, body {
@@ -591,7 +745,7 @@ body::after {
     inset 0 0 20px color-mix(in srgb, var(--gold) 15%, transparent);
 }
 .btn-primary:hover {
-  background: var(--pop);
+  background: var(--accent-deep);
   box-shadow:
     0 0 28px var(--accent),
     0 0 64px color-mix(in srgb, var(--accent) 70%, transparent),

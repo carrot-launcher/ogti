@@ -165,6 +165,8 @@ function buildArrowBadge(title) {
 const KNOWN_PALETTES = [
   'red-blue', 'lime-magenta', 'matrix',
   'sunset', 'ice', 'blood-moon', 'vaporwave',
+  'hacker', 'miami', 'aurora', 'arcade',
+  'lava', 'deep-sea', 'halloween',
 ];
 
 function resolvePalette(spec) {
@@ -467,6 +469,7 @@ function finish() {
 }
 
 function restart() {
+  applyThemeAndPalette();
   show('landing');
 }
 
