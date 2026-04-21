@@ -113,17 +113,31 @@ function renderQuestion() {
 }
 
 function answer(value) {
+  if (state.pending) return;
+  state.pending = true;
+
   const q = state.shuffled[state.index];
   const pole = value < 0 ? q.choices[0].pole : q.choices[1].pole;
   const strength = Math.abs(value);
   state.answers[state.index] = { pole, strength };
 
-  if (state.index === state.shuffled.length - 1) {
-    finish();
-  } else {
-    state.index++;
-    renderQuestion();
-  }
+  // 選択ボタンを視覚的にハイライト
+  const buttons = document.querySelectorAll('.likert-btn');
+  buttons.forEach((b) => b.classList.remove('selected'));
+  buttons.forEach((b) => {
+    if (Number(b.dataset.value) === value) b.classList.add('selected');
+  });
+
+  // 選択が見える時間を取ってから遷移
+  setTimeout(() => {
+    state.pending = false;
+    if (state.index === state.shuffled.length - 1) {
+      finish();
+    } else {
+      state.index++;
+      renderQuestion();
+    }
+  }, 280);
 }
 
 function back() {

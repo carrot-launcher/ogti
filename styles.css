@@ -1070,20 +1070,30 @@ footer.site-foot::after {
   .brand-title { text-shadow: 0 0 6px var(--accent), 0 0 18px var(--accent), 2px 2px 0 var(--gold), 4px 4px 0 var(--ink); }
   .brand-sub::before, .brand-sub::after { width: 20px; }
   .lead { padding: 24px 22px 24px 26px; }
-  .axes-intro { gap: 16px; }
+  .axes-intro { gap: 18px; }
   .axes-intro li {
-    grid-template-columns: 1fr auto 1fr;
-    gap: 8px 6px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    gap: 8px;
+    justify-items: stretch;
   }
-  .axes-intro li > span:not(.vs) {
-    padding: 10px 10px;
-    font-size: 14px;
-    gap: 6px;
+  .axes-intro li > span[data-pole] {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 15px;
   }
-  .axes-intro small { font-size: 11px; margin: 0; }
-  .axes-intro .vs { padding: 7px 18px 6px; gap: 7px; min-width: 150px; margin: 0; }
-  .axes-intro .vs strong { font-size: 13px; letter-spacing: 0.1em; }
-  .axes-intro .vs small { font-size: 11px; letter-spacing: 0.08em; }
+  .axes-intro small { font-size: 14px; margin: 0; }
+  .axes-intro li > span[data-pole] small { font-size: 15px; padding-bottom: 2px; }
+  .axes-intro .vs {
+    justify-self: center;
+    min-width: 160px;
+    padding: 8px 22px 7px;
+    gap: 8px;
+    margin: 0;
+  }
+  .axes-intro .vs strong { font-size: 14px; letter-spacing: 0.1em; }
+  .axes-intro .vs small { font-size: 12px; letter-spacing: 0.08em; }
+  .init { font-size: 1.8em; }
   .question { padding: 32px 20px 26px; }
   .question-prompt { font-size: 17px; }
   .choice-pair { grid-template-columns: 1fr; gap: 12px; }
