@@ -1167,6 +1167,30 @@ body::after {
   text-shadow: 0 0 60px var(--group-color);
   user-select: none;
 }
+
+/* 本人固有の4軸 sigil (カード背景に透かして描く) */
+.type-sigil {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 92%;
+  aspect-ratio: 1 / 1;
+  max-width: 92%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.45;
+  filter: drop-shadow(0 0 18px var(--group-color));
+}
+.type-sigil svg { width: 100%; height: 100%; display: block; }
+/* result-card のテキスト系は sigil より上に積む (既に position指定のある要素は除外) */
+.result-card > :not(.type-watermark):not(.type-sigil):not(.type-symbol) {
+  position: relative;
+  z-index: 1;
+}
+.type-symbol { z-index: 1; }  /* position: absolute のまま前面に */
+.type-watermark { display: none; }  /* 大きな漢字背景は撤去 */
+
 .type-symbol {
   position: absolute;
   top: 18px;

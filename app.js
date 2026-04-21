@@ -414,6 +414,7 @@ function renderResult(overrideCode = null) {
   }
   document.getElementById('type-watermark').textContent = t.symbol;
   document.getElementById('type-symbol').textContent = t.symbol;
+  renderSigilSVG(document.getElementById('type-sigil'), code, clarity, gc);
   document.getElementById('result-code').textContent = code;
   document.getElementById('result-name').textContent = t.name;
   document.getElementById('result-tagline').textContent = t.tagline;
@@ -605,6 +606,73 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
+// ---- Sigil (本人固有の4軸を1つの形に) ----
+// 各軸に N/E/S/W の基準方向を割り当て、勝った極に応じて±22.5°だけシフトする。
+// これで4頂点は常に4象限に散らばるため、閉多角形は必ず原点を内包する。
+// 4軸×2極で 16通りの頂点配置 → 16タイプ固有のシルエット。
+// 頂点までの距離は clarity (確信度) で決まる。
+const SIGIL_AXIS_BASE = [90, 0, 270, 180];  // axis 0..3 の基準方向 (度)
+const SIGIL_AXIS_SHIFT = 22.5;              // 極でこの分だけ CCW/CW にずらす
+function computeSigilVertices(code, clarity, maxR) {
+  const raw = config.axes.map((axis, i) => {
+    // べき乗 0.35 で小さい clarity を視覚的に底上げ (弱い軸ほど中心寄り、の相対情報は保存)
+    const c = Math.pow(Math.max(0, clarity[axis.key] ?? 0), 0.35);
+    const isLeft = code[i] === axis.left.pole;
+    // 左極は CCW (+)、右極は CW (-) にシフト
+    const angleDeg = SIGIL_AXIS_BASE[i] + (isLeft ? SIGIL_AXIS_SHIFT : -SIGIL_AXIS_SHIFT);
+    const rad = (angleDeg * Math.PI) / 180;
+    return {
+      x:  Math.cos(rad) * c * maxR,
+      y: -Math.sin(rad) * c * maxR,  // 画面座標は y 下向き
+      angle: ((angleDeg % 360) + 360) % 360,
+    };
+  });
+  // 角度順に並べ替えてきれいな閉多角形にする
+  raw.sort((a, b) => a.angle - b.angle);
+  return raw;
+}
+
+// 結果画面向け SVG 版 sigil (カード背景に透かして単色で描く)
+function renderSigilSVG(container, code, clarity, gc) {
+  if (!container) return;
+  const maxR = 100;
+  const padding = 8;
+  const vb = maxR + padding;
+  const vs = computeSigilVertices(code, clarity, maxR);
+  const points = vs.map((v) => `${v.x.toFixed(1)},${v.y.toFixed(1)}`).join(' ');
+  const main = gc?.main || 'var(--accent)';
+  container.innerHTML = `<svg viewBox="-${vb} -${vb} ${vb * 2} ${vb * 2}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <polygon points="${points}" fill="${main}" />
+  </svg>`;
+}
+
+function drawSigil(ctx, cx, cy, code, clarity, opts = {}) {
+  const {
+    maxR = 300,
+    color = '#ffffff',
+    fillAlpha = 0.35,
+    glowBlur = 40,
+  } = opts;
+  const vs = computeSigilVertices(code, clarity, maxR);
+
+  ctx.save();
+  ctx.translate(cx, cy);
+
+  // 単色塗りつぶしの多角形 (発光あり)
+  ctx.beginPath();
+  vs.forEach((v, i) => {
+    if (i === 0) ctx.moveTo(v.x, v.y);
+    else ctx.lineTo(v.x, v.y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = hexToRgba(color, fillAlpha);
+  ctx.shadowColor = color;
+  ctx.shadowBlur = glowBlur;
+  ctx.fill();
+
+  ctx.restore();
+}
+
 function drawNeonText(ctx, text, x, y, color, offsetColor, offsetDist = 6) {
   ctx.save();
   // Offset depth (gold + ink)
@@ -659,7 +727,7 @@ function wrapJPTextTop(ctx, text, x, topY, maxWidth, lineHeight) {
 }
 
 async function generateShareCanvas(format = 'square') {
-  const { code } = computeResult();
+  const { code, clarity } = computeResult();
   const t = types[code];
   const group = code.substring(0, 2);
   const subGroup = code.substring(2, 4);
@@ -670,6 +738,7 @@ async function generateShareCanvas(format = 'square') {
     bg:        cssVar('--bg',         '#0a0618'),
     accent:    cssVar('--accent',     '#ff2e6b'),
     gold:      cssVar('--gold',       '#ffe63a'),
+    poleLeft:  cssVar('--pole-left',  '#ff1a6b'),
     poleRight: cssVar('--pole-right', '#00eaff'),
     text:      cssVar('--text',       '#faf8ff'),
     muted:     cssVar('--muted',      '#9388b8'),
@@ -739,17 +808,15 @@ async function generateShareCanvas(format = 'square') {
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
   }
 
-  // ---- Watermark symbol (カード中心に描画) ----
-  // iOS Safari で globalAlpha + shadowBlur が不安定なので rgba() で直接指定
-  ctx.save();
-  ctx.font = `${isPortrait ? 540 : 720}px "Rampart One"`;
-  ctx.fillStyle = hexToRgba(gc.main, 0.14);
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.shadowColor = hexToRgba(gc.main, 0.25);
-  ctx.shadowBlur = 50;
-  ctx.fillText(t.symbol, cardCx, cardCy);
-  ctx.restore();
+  // ---- Sigil watermark (本人固有の4軸シンボル) ----
+  // カード枠の下、テキストの背後に単色で描く。本人固有の指紋として機能する。
+  // clarity が1未満でも見栄えするよう、カード内ギリギリまでmaxRを取る
+  drawSigil(ctx, cardCx, cardCy, code, clarity, {
+    maxR:      Math.min(cardW, cardH) * 0.47,
+    color:     gc.main,
+    fillAlpha: 0.32,
+    glowBlur:  isPortrait ? 40 : 56,
+  });
 
   // ---- Card border ----
   ctx.save();
