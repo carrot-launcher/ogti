@@ -535,7 +535,7 @@ async function finish() {
   show('result');
   // 描画完了を待ってからフェードインに入る
   await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-  app.style.transitionDuration = '100ms';
+  app.style.transitionDuration = '300ms';
   app.classList.remove('is-transitioning');
   setTimeout(() => {
     app.style.transitionDuration = '';
